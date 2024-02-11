@@ -1,3 +1,27 @@
+-- internet-radio
+-- v0.1.1 @tapecanvas
+-- inspired by:
+-- @mlogger + @infinitedigits
+-- with help from:
+-- github-copilot
+-- temp-lines-url
+--
+-- internet radio player
+-- built with mpv 
+-- 
+-- controls:
+-- e3 scrolls through list
+-- k3 plays stream 
+-- k2 stops playback
+--
+-- params:
+-- edit stream name
+-- edit stream url
+-- add stream* 
+-- *see "add your own streams" 
+-- in the readme*
+
+
 local streams = {}
 local current_stream = nil
 FileSelect = require 'fileselect'
@@ -5,21 +29,20 @@ local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
 
+-- redundant? 
 function add_stream(name, address)
-    -- TODO: Implement
-    table.insert(streams, {name = name, address = address})
+   table.insert(streams, {name = name, address = address})
 end
 
+-- initialize an empty stream array to load streams.txt into
 streams = {}
 
-function edit_stream(current_name, new_name, new_address)
-    -- TODO: Implement
-end
-
+-- TO DO
 function delete_stream(name)
     -- TODO: Implement
 end
 
+-- scroll through stream list
 function scroll_streams(direction)
     current_stream_index = current_stream_index + direction
     if current_stream_index < 1 then
@@ -37,9 +60,10 @@ function scroll_streams(direction)
     redraw()
 end
 
+-- play selected stream
 function play_stream()
     if streams[current_stream_index] then
-        os.execute('mpv ' .. streams[current_stream_index].address .. ' &')
+        os.execute('mpv --no-video --jack-port="crone:input_(1|2)" ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
 
          -- Update the parameters to reflect the current stream
@@ -48,11 +72,13 @@ function play_stream()
     end
 end
 
+-- stop the stream
 function stop_stream()
     os.execute('killall mpv')
     is_playing = false
 end
 
+-- save changes to streams.txt file
 function save_streams()
     local file, err = io.open("/home/we/dust/code/internet-radio/streams.txt", "w")
     if not file then
@@ -69,6 +95,7 @@ function save_streams()
     end
 end
 
+-- load streams.txt file
 function load_streams()
     local file = io.open("/home/we/dust/code/internet-radio/streams.txt", "r")
     if file then
@@ -86,6 +113,7 @@ function load_streams()
     end
 end    
 
+-- keys
 function key(n,z)
     if n == 2 and z == 1 then
         if is_playing then
@@ -103,16 +131,17 @@ function key(n,z)
     end
 end
 
+-- encoders
 function enc(n,d)
     if n == 3 then
         scroll_streams(d)
     end
 end
 
+-- screen
 function redraw()
   screen.clear()
   screen.aa(0)
---  screen.font_face(15)
   screen.font_face(15)
   screen.font_size(8)
   screen.level(15)
@@ -134,28 +163,31 @@ end
     screen.update()
 end
 
+-- init params
 function init()
     load_streams()
     current_stream_index = 1
     
     params:add_separator("edit cur. stream name or url")
+    
     params:add{type = "text", id = "stream_name", name = "",
         action = function(value) streams[current_stream_index].name = value 
-        save_streams() -- Save the changes
+        save_streams()
         end}
 
     params:add{type = "text", id = "stream_address", name = "",
         action = function(value) streams[current_stream_index].address = value 
-        save_streams() -- Save the changes
+        save_streams()
         end}
     
-        params:add_separator("add stream: (name,url)")  
+    params:add_separator("add stream: (name,url)")  
+    
     params:add{type = "text", id = "add_stream", name = "add stream: ",
         action = function(value)
         local name, address = string.match(value, "(.-),(.*)")
         if name and address then
             add_stream(name, address)
-            save_streams() -- Save the changes
+            save_streams() 
         end
     end
 }

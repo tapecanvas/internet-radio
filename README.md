@@ -1,5 +1,5 @@
 # this is a work in progress!
-- **requires mpv to be installed (not sure if it's installed by default?)**
+- **requires internet connection (wifi or ethernet) and mpv to be installed (not sure if it's installed by default?)**
     - to check/install mpv:
         - ssh into norns `ssh we@norns.local`
         - run `sudo apt install mpv` 

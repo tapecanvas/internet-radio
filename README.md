@@ -1,8 +1,15 @@
 # this is a work in progress!
+<<<<<<< HEAD
 - **requires internet connection (wifi or ethernet) and mpv to be installed (not installed by default)**
     - to check/install mpv:
+=======
+- install from maiden with `;install https://github.com/tapecanvas/internet-radio`
+- **requires internet connection (wifi or ethernet) and mpv to be installed (not sure if it's installed by default atm)**
+    - to check/install mpv:         
+>>>>>>> 7d0c92574d310f035d611905701c8ec516d1632e
         - ssh into norns `ssh we@norns.local`
-        - run `sudo apt install mpv` 
+        - run `sudo apt install mpv`
+    - OR from maiden `os.execute('sudo apt install mpv')` 
 - a great use for norns when you're not actively making music on it
 - also a test of github copilot
 - inspired by @mlogger 's idea in https://llllllll.co/t/norns-ideas/17625/1328

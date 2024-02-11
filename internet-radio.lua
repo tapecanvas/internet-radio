@@ -92,10 +92,14 @@ function play_stream()
     if streams[current_stream_index] then
         os.execute('mpv --no-video --jack-port="crone:input_(1|2)" ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
+        playing_stream_index = current_stream_index
 
          -- Update the parameters to reflect the current stream
          params:set("stream_name", streams[current_stream_index].name)
          params:set("stream_address", streams[current_stream_index].address)
+         
+        -- Redraw the screen to show the play icon on the playing track
+        redraw()
     end
 end
 
@@ -103,24 +107,49 @@ end
 function stop_stream()
     os.execute('killall mpv')
     is_playing = false
+    playing_stream_index = nil
 end
 
--- toggle favorite status and re-sort streams
+-- toggle favorite status
 function toggle_favorite()
     if streams[current_stream_index] then
         streams[current_stream_index].favorite = not streams[current_stream_index].favorite
-        table.sort(streams, function(a, b)
-            if a.favorite and not b.favorite then
-                return true
-            elseif not a.favorite and b.favorite then
-                return false
-            else
-                return a.name < b.name
+        local was_playing = is_playing and streams[playing_stream_index]
+        sort_streams()
+        if was_playing then
+            for i, stream in ipairs(streams) do
+                if stream == was_playing then
+                    playing_stream_index = i
+                    break
+                end
             end
-        end)
-        save_streams()
+        end
         redraw()
     end
+end
+
+-- sort streams by favorite status
+function sort_streams()
+    local was_playing = is_playing and streams[playing_stream_index]
+    table.sort(streams, function(a, b)
+        if a.favorite and not b.favorite then
+            return true
+        elseif not a.favorite and b.favorite then
+            return false
+        else
+            return a.name < b.name
+        end
+    end)
+    if was_playing then
+        for i, stream in ipairs(streams) do
+            if stream == was_playing then
+                playing_stream_index = i
+                break
+            end
+        end
+    end
+    save_streams()
+    redraw()
 end
 
 -- keys
@@ -147,26 +176,29 @@ end
 
 -- screen
 function redraw()
-  screen.clear()
-  screen.aa(0)
-  screen.font_face(1) --15
-  screen.font_size(8)
-  screen.level(15)
-  for i = 1, 7 do
-    local stream_index = top_stream_index + i - 1
-    if stream_index <= #streams then
-        local stream = streams[stream_index]
-        if stream_index == current_stream_index then
-            screen.level(15) -- Highlight the current stream
-            screen.font_size(10)
-        else
-            screen.level(5) -- Dim other streams
-            screen.font_size(8)
+    screen.clear()
+    screen.aa(0)
+    screen.font_face(1) 
+    screen.font_size(8)
+    for i = 1, 7 do
+        local stream_index = top_stream_index + i - 1
+        if stream_index <= #streams then
+            local stream = streams[stream_index]
+            if stream_index == current_stream_index then
+                -- Draw a rectangle for the current stream
+                screen.level(15) -- Set the background color to white
+                screen.rect(0, (i - 1) * 8, 128, 8) -- Draw a rectangle
+                screen.fill() -- Fill the rectangle with white
+                screen.level(0) -- Set the text color as black
+                screen.font_size(10)
+            else
+                screen.level(15) -- Set the text color as white
+                screen.font_size(8)
+            end
+            screen.move(1, i * 8)
+            screen.text((stream.favorite and '+' or ' ') .. (is_playing and stream_index == playing_stream_index and '►' or '') .. stream.name)
         end
-        screen.move(1, i * 8)
-        screen.text((stream.favorite and '*' or ' ') .. stream.name)
     end
-end
     screen.update()
 end
 

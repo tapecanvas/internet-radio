@@ -33,7 +33,7 @@ streams = {}
 
 -- add a new stream to the streams array
 function add_stream(name, address)
-   table.insert(streams, {name = name, address = address})
+   table.insert(streams, {name = name, address = address, favorite = false})
 end
 
 -- remove the current stream from the streams array *are you sure?*
@@ -62,7 +62,7 @@ function save_streams()
     end
     file:write("return {\n")
     for _, stream in ipairs(streams) do
-        file:write(string.format("    {name = \"%s\", address = \"%s\"},\n", stream.name, stream.address))
+        file:write(string.format("    {name = \"%s\", address = \"%s\", favorite = %s},\n", stream.name, stream.address, tostring(stream.favorite)))
     end
     file:write("}\n")
     file:close()
@@ -104,6 +104,24 @@ function stop_stream()
     is_playing = false
 end
 
+-- toggle favorite status and re-sort streams
+function toggle_favorite()
+    if streams[current_stream_index] then
+        streams[current_stream_index].favorite = not streams[current_stream_index].favorite
+        table.sort(streams, function(a, b)
+            if a.favorite and not b.favorite then
+                return true
+            elseif not a.favorite and b.favorite then
+                return false
+            else
+                return a.name < b.name
+            end
+        end)
+        save_streams()
+        redraw()
+    end
+end
+
 -- keys
 function key(n,z)
     if z == 1 then
@@ -121,6 +139,9 @@ function enc(n,d)
     if n == 2 then
         scroll_streams(d)
     end
+    if n == 3 then
+        toggle_favorite()
+    end
 end
 
 -- screen
@@ -135,7 +156,6 @@ function redraw()
     if stream_index <= #streams then
         local stream = streams[stream_index]
         if stream_index == current_stream_index then
-            
             screen.level(15) -- Highlight the current stream
             screen.font_size(10)
         else
@@ -143,7 +163,7 @@ function redraw()
             screen.font_size(8)
         end
         screen.move(1, i * 8)
-        screen.text(stream.name)
+        screen.text((stream.favorite and '*' or ' ') .. stream.name)
     end
 end
     screen.update()

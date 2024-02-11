@@ -31,10 +31,11 @@
 `stream name, https://yourstreamurlusuallyendingin-mp3`
 
 # to-do
-- [ ] way to favorite streams / bump to top of list
+- [x] way to favorite streams / bump to top of list
 - [ ] more diverse default streams
 - [ ] add default exit parameter option (close - kill mpv on new script load, or open - allow to keep playing and use as input for other scripts)
 - [ ] volume control - depends on what I decide to do about input src vs passthough engine (see "radio as script" below)
+- [x] way to favorite streams / bump to top of list
 - [x] delete current stream option in params
 - [x] update streams.lua documentation comments
 - [x] verify add script from params page works (:

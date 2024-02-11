@@ -10,9 +10,11 @@
 
 # currently
 ### main controls
-- e3 scrolls through list
+- e2 scrolls through list
+- e3 favorites/unfavorites streams
 - k3 plays selected stream (also stops previously playing stream before playing a new stream)
 - k2 stops playback
+
 ### params menu
 - edit stream name
 - edit stream url
@@ -31,7 +33,6 @@
 `stream name, https://yourstreamurlusuallyendingin-mp3`
 
 # to-do
-- [x] way to favorite streams / bump to top of list
 - [ ] more diverse default streams
 - [ ] add default exit parameter option (close - kill mpv on new script load, or open - allow to keep playing and use as input for other scripts)
 - [ ] volume control - depends on what I decide to do about input src vs passthough engine (see "radio as script" below)

@@ -11,6 +11,7 @@
 -- 
 -- controls:
 -- e2 scrolls through list
+-- e3 mark stream as favorite
 -- k3 plays stream 
 -- k2 stops playback
 --

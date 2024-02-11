@@ -10,23 +10,7 @@ function add_stream(name, address)
     table.insert(streams, {name = name, address = address})
 end
 
--- hardcode the streams for now
-streams = {
-    {name = "SomaFM - Groove Salad", address = "http://ice1.somafm.com/groovesalad-128-mp3"},
-    {name = "SomaFM - Lush", address = "http://ice1.somafm.com/lush-128-mp3"},
-    {name = "SomaFM - Secret Agent", address = "http://ice1.somafm.com/secretagent-128-mp3"},
-    {name = "SomaFM - Space Station Soma", address = "http://ice1.somafm.com/spacestation-128-mp3"},
-    {name = "SomaFM - Suburbs of Goa", address = "http://ice1.somafm.com/suburbsofgoa-128-mp3"},
-    {name = "SomaFM - The Trip", address = "http://ice1.somafm.com/thetrip-128-mp3"},
-    {name = "SomaFM - Underground 80s", address = "http://ice1.somafm.com/u80s-128-mp3"},
-    {name = "SomaFM - PopTron", address = "http://ice1.somafm.com/poptron-128-mp3"},
-    {name = "SomaFM - DEF CON Radio", address = "http://ice1.somafm.com/defcon-128-mp3"},
-    {name = "SomaFM - Digitalis", address = "http://ice1.somafm.com/digitalis-128-mp3"},
-    {name = "SomaFM - Boot Liquor", address = "http://ice1.somafm.com/bootliquor-128-mp3"},
-    {name = "SomaFM - Illinois Street Lounge", address = "http://ice1.somafm.com/illstreet-128-mp3"},
-    {name = "SomaFM - Seven Inch Soul", address = "http://ice1.somafm.com/seveninch-128-mp3"},
-    {name = "SomaFM - Sonic Universe", address = "http://ice1.somafm.com/sonicuniverse-128-mp3"}
-}
+streams = {}
 
 function edit_stream(current_name, new_name, new_address)
     -- TODO: Implement
@@ -43,11 +27,13 @@ function scroll_streams(direction)
     elseif current_stream_index > #streams then
         current_stream_index = 1
     end
+
     if current_stream_index < top_stream_index then
         top_stream_index = current_stream_index
-    elseif current_stream_index > top_stream_index + 7 then
-        top_stream_index = current_stream_index - 7
+    elseif current_stream_index > top_stream_index + 6 then
+        top_stream_index = current_stream_index - 6
     end
+
     redraw()
 end
 
@@ -55,6 +41,10 @@ function play_stream()
     if streams[current_stream_index] then
         os.execute('mpv ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
+
+         -- Update the parameters to reflect the current stream
+         params:set("stream_name", streams[current_stream_index].name)
+         params:set("stream_address", streams[current_stream_index].address)
     end
 end
 
@@ -63,15 +53,38 @@ function stop_stream()
     is_playing = false
 end
 
-
-
 function save_streams()
-    -- TODO: Implement
+    local file, err = io.open("/home/we/dust/code/internet-radio/streams.txt", "w")
+    if not file then
+        file = io.open("/home/we/dust/code/internet-radio/streams.txt", "w")
+    end
+    if file then
+        for _, stream in ipairs(streams) do
+            file:write(stream.name .. "\n")
+            file:write(stream.address .. "\n")
+        end
+        file:close()
+    else
+        print("Failed to open file: " .. err)
+    end
 end
 
 function load_streams()
-    -- TODO: Implement
-end
+    local file = io.open("/home/we/dust/code/internet-radio/streams.txt", "r")
+    if file then
+        streams = {}
+        while true do
+            local name = file:read("*l")
+            local address = file:read("*l")
+            if name and address then
+                table.insert(streams, {name = name, address = address})
+            else
+                break
+            end
+        end
+        file:close()
+    end
+end    
 
 function key(n,z)
     if n == 2 and z == 1 then
@@ -99,19 +112,22 @@ end
 function redraw()
   screen.clear()
   screen.aa(0)
+--  screen.font_face(15)
   screen.font_face(15)
   screen.font_size(8)
   screen.level(15)
-  for i = 0, 7 do
-    local stream_index = top_stream_index + i
+  for i = 1, 7 do
+    local stream_index = top_stream_index + i - 1
     if stream_index <= #streams then
         local stream = streams[stream_index]
         if stream_index == current_stream_index then
             screen.level(15) -- Highlight the current stream
+            screen.font_size(8)
         else
             screen.level(5) -- Dim other streams
+            screen.font_size(7)
         end
-        screen.move(0, i * 8)
+        screen.move(1, i * 8)
         screen.text(stream.name)
     end
 end
@@ -120,4 +136,30 @@ end
 
 function init()
     load_streams()
+    current_stream_index = 1
+    
+    params:add_separator("edit cur. stream name or url")
+    params:add{type = "text", id = "stream_name", name = "",
+        action = function(value) streams[current_stream_index].name = value 
+        save_streams() -- Save the changes
+        end}
+
+    params:add{type = "text", id = "stream_address", name = "",
+        action = function(value) streams[current_stream_index].address = value 
+        save_streams() -- Save the changes
+        end}
+    
+        params:add_separator("add stream: (name,url)")  
+    params:add{type = "text", id = "add_stream", name = "add stream: ",
+        action = function(value)
+        local name, address = string.match(value, "(.-),(.*)")
+        if name and address then
+            add_stream(name, address)
+            save_streams() -- Save the changes
+        end
+    end
+}
+
+    params:set("stream_name", streams[current_stream_index].name)
+    params:set("stream_address", streams[current_stream_index].address)
 end

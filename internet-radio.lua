@@ -99,7 +99,7 @@ function play_stream()
 
          -- Update the parameters to reflect the current stream
          params:set("stream_name", streams[current_stream_index].name)
-         params:set("stream_address", streams[current_stream_index].address)
+          params:set("stream_address", streams[current_stream_index].address)
 
         -- Redraw the screen to show the play icon on the playing track
         redraw()
@@ -155,6 +155,47 @@ function sort_streams()
     redraw()
 end
 
+-- Save the current state to a file (if exit_option is "open", this will retain which stream is being played when you re-open the script)
+function save_state()
+    local file, err = io.open("/home/we/dust/data/internet-radio/state.lua", "w")
+    if not file then
+        print("Failed to open file: " .. err)
+        return
+    end
+    file:write("return {\n")
+    file:write(string.format("    current_stream_index = %d,\n", current_stream_index))
+    file:write(string.format("    playing_stream_index = %d,\n", playing_stream_index))
+    file:write(string.format("    exit_option = %d, \n", exit_option == "close" and 1 or 2))
+    file:write("}\n")
+    file:close()
+end
+
+-- Load the current state from a file
+function load_state()
+    local file
+    local path = "/home/we/dust/data/internet-radio/state.lua"
+    if not pcall(function() file = dofile(path) end) then
+        -- If the file does not exist, create it with default values
+        local default_file, err = io.open(path, "w")
+        if not default_file then
+            print("Failed to create file: " .. err)
+            return
+        end
+        default_file:write("return {\n")
+        default_file:write("    current_stream_index = 1,\n")
+        default_file:write("    playing_stream_index = nil,\n")
+        default_file:write("    exit_option = 1\n")
+        default_file:write("}\n")
+        default_file:close()
+        file = dofile(path)
+    end
+    if file then
+        current_stream_index = file.current_stream_index or 1
+        playing_stream_index = file.playing_stream_index
+        exit_option = file.exit_option == 1 and "close" or "leave open"
+    end
+end
+
 -- keys
 function key(n,z)
     if z == 1 then
@@ -208,6 +249,7 @@ end
 -- deinitialization 
 -- stop mpv or leave running when another script is selected 
 function cleanup()
+    save_state()
     if exit_option == "close" then
         stop_stream()
     end
@@ -215,17 +257,19 @@ end
 
 function init()
     load_streams()
-    current_stream_index = 1
+    load_state()
 
+    params:add_separator("open=leave mpv running")
     -- "open" - script will continue playing when another script is selected (can run radio through effects, etc..)
     -- "close" - typical behavior, stops radio when another script is selected
-    params:add{type = "option", id = "exit_option", name = "Exit Option", options = {"close", "leave open"}, default = 1,
-        action = function(value)
-        exit_option = value == 1 and "close" or "leave open"
-        end
-    }
+    params:add{type = "option", id = "exit_option", name = "exit option", options = {"close", "leave open"}, default = exit_option == "close" and 1 or 2,
+    action = function(value)
+    exit_option = value == 1 and "close" or "leave open"
+    end
+}
 
-    params:add_separator("edit cur. stream name or url")
+    -- params:add_separator("edit cur. stream name or url")
+    params:add_separator("edit cur. stream name")
 
     params:add{type = "text", id = "stream_name", name = "",
         action = function(value) 
@@ -233,11 +277,11 @@ function init()
             save_streams()
         end}
 
-    params:add{type = "text", id = "stream_address", name = "",
-        action = function(value) 
-            streams[current_stream_index].address = value 
-            save_streams()
-        end}
+     params:add{type = "text", id = "stream_address", name = "",
+     action = function(value) 
+         streams[current_stream_index].address = value 
+         save_streams()
+     end}
 
     params:add_separator("add stream: (name,url)")  
 
@@ -263,5 +307,12 @@ function init()
     if streams[current_stream_index] then
         params:set("stream_name", streams[current_stream_index].name)
         params:set("stream_address", streams[current_stream_index].address)
+    end
+
+    if playing_stream_index and exit_option ~= "close" then
+        current_stream_index = playing_stream_index
+        play_stream()
+    else
+        current_stream_index = 1
     end
 end

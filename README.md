@@ -47,6 +47,7 @@
 - [ ] link to mpv docs in README
 - [ ] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
+- [x] state saving functionality (retains exit option and if set to open, updates screen to reflect currently playing stream)
 - [x] add default exit parameter option (close - kill mpv on new script load, or open - allow to keep playing and use as input for other scripts)
 - [x] update version in script header
 - [x] change order of maiden and ssh instruction in readme

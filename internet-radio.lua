@@ -97,7 +97,7 @@ function play_stream()
          -- Update the parameters to reflect the current stream
          params:set("stream_name", streams[current_stream_index].name)
          params:set("stream_address", streams[current_stream_index].address)
-         
+
         -- Redraw the screen to show the play icon on the playing track
         redraw()
     end
@@ -205,9 +205,9 @@ end
 function init()
     load_streams()
     current_stream_index = 1
-    
+
     params:add_separator("edit cur. stream name or url")
-    
+
     params:add{type = "text", id = "stream_name", name = "",
         action = function(value) 
             streams[current_stream_index].name = value 
@@ -219,25 +219,24 @@ function init()
             streams[current_stream_index].address = value 
             save_streams()
         end}
-    
+
     params:add_separator("add stream: (name,url)")  
-    
+
     params:add{type = "text", id = "add_stream", name = "add stream",
         action = function(value)
             local name, address = string.match(value, "(.-),(.*)")
             if name and address then
                 add_stream(name, address)
-                save_streams() 
+                save_streams()
             end
         end
     }
-    
+
     params:add_separator("delete current stream")
-    
+
     params:add{type = "trigger", id = "delete_stream", name = "*delete current stream*",
     action = function(value)
         delete_stream()
-        
     end
 }
 

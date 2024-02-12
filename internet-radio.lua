@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.4 @tapecanvas
+-- v0.1.5 @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -235,7 +235,6 @@ function redraw()
                 screen.rect(0, (i - 1) * 8, 128, 9) -- Draw a rectangle
                 screen.fill() -- Fill the rectangle with white
                 screen.level(0) -- Set the text color as black
-                
             elseif stream_index == playing_stream_index then
                 screen.level(5)
                 screen.rect(0, (i - 1) * 8, 128, 9)

@@ -1,3 +1,4 @@
+![currentscreenshot](24-2-11screen.jpeg)
 # this is a work in progress!
 - **requires internet connection (wifi or ethernet) and mpv to be installed (not installed by default)**
     - to check/install mpv:

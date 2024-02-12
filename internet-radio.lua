@@ -222,19 +222,25 @@ end
 function redraw()
     screen.clear()
     screen.aa(0)
-    screen.font_face(1) 
-    screen.font_size(8)
+    screen.font_face(1)
     for i = 1, 7 do
         local stream_index = top_stream_index + i - 1
+        screen.font_size(8)
         if stream_index <= #streams then
             local stream = streams[stream_index]
             if stream_index == current_stream_index then
                 -- Draw a rectangle for the current stream
+                screen.font_size(10)
                 screen.level(15) -- Set the background color to white
-                screen.rect(0, (i - 1) * 8, 128, 8) -- Draw a rectangle
+                screen.rect(0, (i - 1) * 8, 128, 9) -- Draw a rectangle
                 screen.fill() -- Fill the rectangle with white
                 screen.level(0) -- Set the text color as black
-                screen.font_size(10)
+                
+            elseif stream_index == playing_stream_index then
+                screen.level(5)
+                screen.rect(0, (i - 1) * 8, 128, 9)
+                screen.fill()
+                screen.level(0)
             else
                 screen.level(15) -- Set the text color as white
                 screen.font_size(8)

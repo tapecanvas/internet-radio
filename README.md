@@ -1,13 +1,16 @@
 ![currentscreenshot](24-2-11screen.jpeg)
 # this is a work in progress!
-- **requires internet connection (wifi or ethernet) and mpv to be installed (not installed by default)**
-    - to check/install mpv:
-        - ssh into norns `ssh we@norns.local`
-        - run `sudo apt install mpv`
-    - OR from maiden `os.execute('sudo apt install mpv')` 
+- play internet raido streams from your norns
 - a great use for norns when you're not actively making music on it
 - also a test of github copilot
 - inspired by @mlogger 's idea in https://llllllll.co/t/norns-ideas/17625/1328
+
+- **requires internet connection (wifi or ethernet) and mpv to be installed (not installed by default)**
+    - **to check for/install mpv:**
+        - from maiden `os.execute('sudo apt install mpv')`
+      - **OR**
+        - ssh into norns `ssh we@norns.local`
+        - run `sudo apt install mpv`
 
 # currently
 ### main controls
@@ -37,6 +40,14 @@
 - [ ] more diverse default streams
 - [ ] add default exit parameter option (close - kill mpv on new script load, or open - allow to keep playing and use as input for other scripts)
 - [ ] volume control - depends on what I decide to do about input src vs passthough engine (see "radio as script" below)
+- [ ] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
+- [ ] update version in script header
+- [ ] add supported stream format details
+    - [ ] add tips on finding streams / links to stream lists?
+- [ ] link to mpv docs
+- [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
+- [ ] think about community stream list
+- [x] change order of maiden and ssh instruction in readme
 - [x] way to favorite streams / bump to top of list
 - [x] delete current stream option in params
 - [x] update streams.lua documentation comments

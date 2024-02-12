@@ -20,6 +20,7 @@
 - k2 stops playback
 
 ### params menu
+- exit option (close - kill mpv and close script if another script is selected, open - leave mpv running to run through effects scripts, etc) default = close
 - edit stream name
 - edit stream url
 - add stream (see "add your own streams" below)
@@ -37,16 +38,17 @@
 `stream name, https://yourstreamurlusuallyendingin-mp3`
 
 # to-do
-- [ ] more diverse default streams
-- [ ] add default exit parameter option (close - kill mpv on new script load, or open - allow to keep playing and use as input for other scripts)
+
 - [ ] volume control - depends on what I decide to do about input src vs passthough engine (see "radio as script" below)
-- [ ] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
-- [ ] update version in script header
-- [ ] add supported stream format details
+- [ ] more diverse default streams
+    - [ ] think about community stream list
+- [ ] add supported stream format details to README and streams.lua
     - [ ] add tips on finding streams / links to stream lists?
-- [ ] link to mpv docs
+- [ ] link to mpv docs in README
+- [ ] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
-- [ ] think about community stream list
+- [x] add default exit parameter option (close - kill mpv on new script load, or open - allow to keep playing and use as input for other scripts)
+- [x] update version in script header
 - [x] change order of maiden and ssh instruction in readme
 - [x] way to favorite streams / bump to top of list
 - [x] delete current stream option in params

@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.1 @tapecanvas
+-- v0.1.4 @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -28,8 +28,11 @@ FileSelect = require 'fileselect'
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
+local exit_option = "close" 
+    -- "open" - script will continue playing when another script is selected (can run radio through effects, etc..)
+    -- "close" - typical behavior, stops radio when another script is selected
 
--- initialize an empty stream array to load streams.txt into
+-- initialize an empty stream array to load streams.lua into
 streams = {}
 
 -- add a new stream to the streams array
@@ -46,7 +49,7 @@ function delete_stream()
     end
 end
 
--- load streams.lua file
+-- load streams from streams.lua file
 function load_streams()
     local file = dofile("/home/we/dust/code/internet-radio/streams.lua")
     if file then
@@ -202,9 +205,25 @@ function redraw()
     screen.update()
 end
 
+-- deinitialization 
+-- stop mpv or leave running when another script is selected 
+function cleanup()
+    if exit_option == "close" then
+        stop_stream()
+    end
+end
+
 function init()
     load_streams()
     current_stream_index = 1
+
+    -- "open" - script will continue playing when another script is selected (can run radio through effects, etc..)
+    -- "close" - typical behavior, stops radio when another script is selected
+    params:add{type = "option", id = "exit_option", name = "Exit Option", options = {"close", "leave open"}, default = 1,
+        action = function(value)
+        exit_option = value == 1 and "close" or "leave open"
+        end
+    }
 
     params:add_separator("edit cur. stream name or url")
 
@@ -237,8 +256,8 @@ function init()
     params:add{type = "trigger", id = "delete_stream", name = "*delete current stream*",
     action = function(value)
         delete_stream()
-    end
-}
+        end
+    }
 
     -- Check that there is a current stream before setting the parameters
     if streams[current_stream_index] then

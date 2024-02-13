@@ -25,6 +25,7 @@
 local streams = {}
 local current_stream = nil
 FileSelect = require 'fileselect'
+local selected_file = "/home/we/dust/code/internet-radio/lib/streams.lua"
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
@@ -51,16 +52,20 @@ end
 
 -- load streams from streams.lua file
 function load_streams()
-    local file = dofile("/home/we/dust/code/internet-radio/lib/streams.lua")
+    streams = {} -- clear the streams array
+    local file = dofile(selected_file)
     if file then
         streams = file
         sort_streams() -- sort the streams after loading them
     end
+    current_stream_index = 1 -- reset the current stream index
+    top_stream_index = 1 -- reset the top stream index
+    redraw()
 end
 
 -- save changes to streams.lua file
 function save_streams()
-    local file, err = io.open("/home/we/dust/code/internet-radio/lib/streams.lua", "w")
+    local file, err = io.open(selected_file, "w")
     if not file then
         print("Failed to open file: " .. err)
         return
@@ -168,6 +173,7 @@ function save_state()
     file:write(string.format("    current_stream_index = %d,\n", current_stream_index))
     file:write(string.format("    playing_stream_index = %d,\n", playing_stream_index))
     file:write(string.format("    exit_option = %d, \n", exit_option == "close" and 1 or 2))
+    file:write(string.format("    selected_file = \"%s\",\n", selected_file))
     file:write("}\n")
     file:close()
 end
@@ -186,7 +192,8 @@ function load_state()
         default_file:write("return {\n")
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
-        default_file:write("    exit_option = 1\n")
+        default_file:write("    exit_option = 1,\n")
+        default_file:write("    selected_file = \"/home/we/dust/code/internet-radio/lib/streams.lua\",\n")
         default_file:write("}\n")
         default_file:close()
         file = dofile(path)
@@ -195,6 +202,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
+        selected_file = file.selected_file or "/home/we/dust/code/internet-radio/lib/streams.lua"
     end
 end
 
@@ -263,21 +271,28 @@ function cleanup()
 end
 
 function init()
-    load_streams()
     load_state()
+    load_streams()
 
-    params:add_separator("open=leave mpv running")
+    params:add_separator("select stream list")
+    params:add{type = "file", id = "stream_file", name = "stream list: ", path = selected_file,
+    action = function(value)
+        selected_file = value
+        load_streams()
+    end
+    }
+
+    params:add_separator("open = leave mpv running")
     -- "open" - script will continue playing when another script is selected (can run radio through effects, etc..)
     -- "close" - typical behavior, stops radio when another script is selected
-    params:add{type = "option", id = "exit_option", name = "exit option", options = {"close", "leave open"}, default = exit_option == "close" and 1 or 2,
+    params:add{type = "option", id = "exit_option", name = "exit option: ", options = {"close", "leave open"}, default = exit_option == "close" and 1 or 2,
     action = function(value)
     exit_option = value == 1 and "close" or "leave open"
     end
-}
+    }
 
     -- params:add_separator("edit cur. stream name or url")
-    params:add_separator("edit cur. stream name")
-
+    params:add_separator("edit current stream")
     params:add{type = "text", id = "stream_name", name = "",
         action = function(value) 
             streams[current_stream_index].name = value 
@@ -290,9 +305,8 @@ function init()
          save_streams()
      end}
 
-    params:add_separator("add stream: (name,url)")  
-
-    params:add{type = "text", id = "add_stream", name = "add stream",
+    params:add_separator("add stream: (name,url)")
+    params:add{type = "text", id = "add_stream: ", name = "add stream",
         action = function(value)
             local name, address = string.match(value, "(.-),(.*)")
             if name and address then
@@ -303,8 +317,7 @@ function init()
     }
 
     params:add_separator("delete current stream")
-
-    params:add{type = "trigger", id = "delete_stream", name = "*delete current stream*",
+    params:add{type = "trigger", id = "delete_stream", name = " ***delete current stream***",
     action = function(value)
         delete_stream()
         end
@@ -321,5 +334,5 @@ function init()
         play_stream()
     else
         current_stream_index = 1
-    end
+    end    
 end

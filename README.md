@@ -20,6 +20,7 @@
 - k2 stops playback
 
 ### params menu:
+- stream list (choose a list containing links to internet streams)
 - exit option (close - kill mpv and close script if another script is selected, open - leave mpv running to run through effects scripts, etc) default = close
 - edit stream name
 - edit stream url
@@ -28,11 +29,13 @@
 # add your own streams (see stream sources section):
 ### method one (recommended):
 - direct your browser of choice to maiden (yournornsip/maiden)
-- go to `/code/internet-radio/lib/streams.lua` file
+- go to `/code/internet-radio/lib/` directory
+- edit `streams.lua` or make your own `filename.lua` list
 - follow the format:
 `{name = "stream name", address = "streamurl"},`
 
 ### method two:
+- this will add a stream to the currently selected stream list
 - go to the params page
 - use a usb keyboard(recommended) or e2 and e3 to enter the stream info in this format:
 `stream name, https://yourstreamurl`
@@ -58,10 +61,15 @@
 - [gist.github.com/spence-man/internet-radio-streams](https://gist.github.com/spence-man/1c37a339d2c5e3aa5b90f7c72b5a39d1)
 
 # to-do:
-- [ ] MAJOR problem: comment hidden streams get removed from streams.lua after sort
-- DO NOT TRY to temporarily hide a stream from your station list by removing it from this steams.lua - it will be deleted from the table
+- [ ] test everything thoroughly
+- [ ] clean up code / comment / streams list
+- [ ] clean up readme
+- [ ] beta test phase
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
-- [ ] think about community stream list
+- [x] think about community stream lists
+- [x] add stream list select parameter to choose a file containing streams to use
+- [x] MAJOR problem: comment hidden streams get removed from streams.lua after sort
+  - DO NOT TRY to temporarily hide a stream from your station list by removing it from this steams.lua - it will be deleted from the table
 - [x] add tips on finding streams / links to stream lists?
 - [x] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
 - [x] more diverse default streams

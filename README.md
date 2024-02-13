@@ -47,11 +47,12 @@
 - And maybe more. MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
 
 # to-do:
+- [ ] move streams.lua to /code/internet-radio/lib folder
 - [ ] more diverse default streams
-    - [ ] think about community stream list
 - [ ] add tips on finding streams / links to stream lists?
 - [ ] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
+- [ ] think about community stream list
 - [x] add supported stream format details to README and streams.lua
 - [x] link to mpv docs in README
 - [x] add grey now-playing highlight
@@ -72,4 +73,3 @@
     - makes sense since radio is not an engine, but a process that you're running on device.  
 - [x] modify / rename option in params
 - [x] keyboard/encoder input to add streams
-

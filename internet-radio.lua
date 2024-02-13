@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.5 @tapecanvas
+-- v0.1.6 @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -51,15 +51,16 @@ end
 
 -- load streams from streams.lua file
 function load_streams()
-    local file = dofile("/home/we/dust/code/internet-radio/streams.lua")
+    local file = dofile("/home/we/dust/code/internet-radio/lib/streams.lua")
     if file then
         streams = file
+        sort_streams() -- sort the streams after loading them
     end
 end
 
 -- save changes to streams.lua file
 function save_streams()
-    local file, err = io.open("/home/we/dust/code/internet-radio/streams.lua", "w")
+    local file, err = io.open("/home/we/dust/code/internet-radio/lib/streams.lua", "w")
     if not file then
         print("Failed to open file: " .. err)
         return
@@ -111,6 +112,7 @@ function stop_stream()
     os.execute('killall mpv')
     is_playing = false
     playing_stream_index = nil
+    redraw()
 end
 
 -- toggle favorite status
@@ -232,12 +234,12 @@ function redraw()
                 -- Draw a rectangle for the current stream
                 screen.font_size(10)
                 screen.level(15) -- Set the background color to white
-                screen.rect(0, (i - 1) * 8, 128, 9) -- Draw a rectangle
+                screen.rect(0, (i - 1) * 8, 128, 10) -- Draw a rectangle
                 screen.fill() -- Fill the rectangle with white
-                screen.level(0) -- Set the text color as black
-            elseif stream_index == playing_stream_index then
+                screen.level(0) -- Set the text color as black 
+            elseif is_playing and stream_index == playing_stream_index then
                 screen.level(5)
-                screen.rect(0, (i - 1) * 8, 128, 9)
+                screen.rect(0, (i - 1) * 8, 128, 10)
                 screen.fill()
                 screen.level(0)
             else

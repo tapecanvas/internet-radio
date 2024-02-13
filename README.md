@@ -1,6 +1,6 @@
-![currentscreenshot](24-2-11screen.jpeg)
+![currentscreenshot](screenshot.png)
 # this is a work in progress!
-- play internet raido streams from your norns
+- play internet radio streams from your norns
 - a great use for norns when you're not actively making music on it
 - also a test of github copilot
 - inspired by @mlogger 's idea in https://llllllll.co/t/norns-ideas/17625/1328
@@ -25,17 +25,17 @@
 - edit stream url
 - add stream (see "add your own streams" below)
 
-# add your own streams:
+# add your own streams (see stream sources section):
 ### method one (recommended):
 - direct your browser of choice to maiden (yournornsip/maiden)
-- go to `/code/internet-radio/streams.lua` file
+- go to `/code/internet-radio/lib/streams.lua` file
 - follow the format:
 `{name = "stream name", address = "streamurl"},`
 
 ### method two:
 - go to the params page
 - use a usb keyboard(recommended) or e2 and e3 to enter the stream info in this format:
-`stream name, https://yourstreamurlusuallyendingin-mp3`
+`stream name, https://yourstreamurl`
 
 # supported stream formats:
 - MP3
@@ -46,13 +46,27 @@
 - FLAC
 - And maybe more. MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
 
+# stream sources:
+- [Live ATC - air traffic control streams](https://www.liveatc.net/feedindex.php) - I like these, but will not add to public stream list due to their terms of use
+- [Broadcastify - emergency, rail, and aviation feeds](https://www.broadcastify.com/listen/) - these usually have annoying ads when you first tune in..
+- [radio-browser - lil bit of everything](https://www.radio-browser.info/tags)
+- [demoscene and video game music stream links](https://mw.rat.bz/davgmsrl/)
+- [github.com/mikepierce/internet-radio-streams](https://github.com/mikepierce/internet-radio-streams)
+- [streamfinder.com](https://www.streamfinder.com)
+- [github.com/junguler/m3u-radio-music-playlists](https://github.com/junguler/m3u-radio-music-playlists)
+- [github.com/mcplayer9999/radio-garden-m3u](https://github.com/mcplayer9999/radio-garden-m3u)
+- [gist.github.com/spence-man/internet-radio-streams](https://gist.github.com/spence-man/1c37a339d2c5e3aa5b90f7c72b5a39d1)
+
 # to-do:
-- [ ] move streams.lua to /code/internet-radio/lib folder
-- [ ] more diverse default streams
-- [ ] add tips on finding streams / links to stream lists?
-- [ ] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
+- [ ] MAJOR problem: comment hidden streams get removed from streams.lua after sort
+- DO NOT TRY to temporarily hide a stream from your station list by removing it from this steams.lua - it will be deleted from the table
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 - [ ] think about community stream list
+- [x] add tips on finding streams / links to stream lists?
+- [x] proper screenshot (see [monome screenshot notes](https://monome.org/docs/norns/help/data/#png))
+- [x] more diverse default streams
+- [x] fix playing highlight issue when re-loading after close
+- [x] move streams.lua to /code/internet-radio/lib folder
 - [x] add supported stream format details to README and streams.lua
 - [x] link to mpv docs in README
 - [x] add grey now-playing highlight

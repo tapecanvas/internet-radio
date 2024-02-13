@@ -25,6 +25,7 @@
 local streams = {}
 local current_stream = nil
 FileSelect = require 'fileselect'
+local selected_file = "/home/we/dust/code/internet-radio/lib/streams.lua"
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
@@ -51,16 +52,18 @@ end
 
 -- load streams from streams.lua file
 function load_streams()
-    local file = dofile("/home/we/dust/code/internet-radio/lib/streams.lua")
+    streams = {} -- clear the streams array
+    local file = dofile(selected_file)
     if file then
         streams = file
         sort_streams() -- sort the streams after loading them
     end
+    redraw()
 end
 
 -- save changes to streams.lua file
 function save_streams()
-    local file, err = io.open("/home/we/dust/code/internet-radio/lib/streams.lua", "w")
+    local file, err = io.open(selected_file, "w")
     if not file then
         print("Failed to open file: " .. err)
         return
@@ -168,6 +171,7 @@ function save_state()
     file:write(string.format("    current_stream_index = %d,\n", current_stream_index))
     file:write(string.format("    playing_stream_index = %d,\n", playing_stream_index))
     file:write(string.format("    exit_option = %d, \n", exit_option == "close" and 1 or 2))
+    file:write(string.format("    selected_file = \"%s\",\n", selected_file))
     file:write("}\n")
     file:close()
 end
@@ -186,7 +190,8 @@ function load_state()
         default_file:write("return {\n")
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
-        default_file:write("    exit_option = 1\n")
+        default_file:write("    exit_option = 1,\n")
+        default_file:write("    selected_file = \"/home/we/dust/code/internet-radio/lib/streams.lua\",\n")
         default_file:write("}\n")
         default_file:close()
         file = dofile(path)
@@ -195,6 +200,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
+        selected_file = file.selected_file or "/home/we/dust/code/internet-radio/lib/streams.lua"
     end
 end
 
@@ -322,4 +328,12 @@ function init()
     else
         current_stream_index = 1
     end
+    
+    params:add{type = "file", id = "stream_file", name = "Stream file", path = selected_file,
+    action = function(value)
+        selected_file = value
+        load_streams()
+    end
+}
+    
 end

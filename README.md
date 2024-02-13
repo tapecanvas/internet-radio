@@ -62,10 +62,14 @@
 
 # to-do:
 - [ ] test everything thoroughly
-- [ ] clean up code / comment / streams list
+  - [ ] state saving, adding streams in all manners, stream edits, etc
+  - [ ] test install steps / use on other norns shields
+- [ ] clean up code / comment / streams list (rename/remove default.lua)
 - [ ] clean up readme
 - [ ] beta test phase
+- [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
+- [x] fix: moving from one stream list to another while a stream is playing result in the play icon showing up in same index on new list but that index is not playing
 - [x] think about community stream lists
 - [x] add stream list select parameter to choose a file containing streams to use
 - [x] MAJOR problem: comment hidden streams get removed from streams.lua after sort

@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.6 @tapecanvas
+-- v0.1.7 @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -279,6 +279,7 @@ function init()
     action = function(value)
         selected_file = value
         load_streams()
+        playing_stream_index = nil -- remove playing icon when new list is selected (since list is different, this icon is irrelevant)+(continues to play the previously playing stream)
     end
     }
 

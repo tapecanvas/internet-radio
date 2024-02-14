@@ -15,10 +15,13 @@
     - **or** install mpv over **ssh**
         - ssh into norns `ssh we@norns.local`
         - run `sudo apt install mpv`
-> *the order that you install internet-radio and mpv does not matter
-
+        - press `enter` when asked if you want to continue with install
+        - wait for the install to complete (will return to prompt after successful install)
+- *the order that you install internet-radio and mpv does not matter
+- **_restart your norns after both internet-radio and mpv have been installed_**
 
 # controls:
+- if you aren't hearing anything, make sure your monitor volume in norns mixer is turned up
 ### main controls:
 - **e2 -** scrolls through list of streams
 - **e3 -** favorites/unfavorites a stream
@@ -76,13 +79,13 @@
 
 
 # to-do:
-- [ ] rename and modify /lib/default.lua (make a template file) and update streams.lua
-- [ ] clean up code / comment / streams list (rename/remove default.lua)
 - [ ] beta test phase
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 
 ## archive:
+- [x] rename and modify /lib/default.lua (make a template file) and update streams.lua
+- [x] clean up code / comment / streams list (rename/remove default.lua)
 - [x] clean up readme
 - [x] update readme again
 - [x] update script header controls

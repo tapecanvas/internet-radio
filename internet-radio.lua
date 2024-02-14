@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.7 @tapecanvas
+-- v0.1.8 @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -7,7 +7,7 @@
 -- temp-lines-url
 --
 -- internet radio player
--- built with mpv 
+-- built around mpv 
 -- 
 -- controls:
 -- e2 scrolls through list
@@ -21,23 +21,20 @@
 -- edit stream name
 -- edit stream url
 -- add stream* 
--- delete currentstream
+-- delete current stream
 -- *see "add your own streams" 
 -- in the readme*
 
-local streams = {}
 local current_stream = nil
 FileSelect = require 'fileselect'
 local selected_file = "/home/we/dust/code/internet-radio/lib/streams.lua"
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
-local exit_option = "close" 
-    -- "open" - script will continue playing when another script is selected (can run radio through effects, etc..)
-    -- "close" - typical behavior, stops radio when another script is selected
+local exit_option = "close"
 
 -- initialize an empty stream array to load streams.lua into
-streams = {}
+local streams = {}
 
 -- add a new stream to the streams array
 function add_stream(name, address)
@@ -106,9 +103,9 @@ function play_stream()
         is_playing = true
         playing_stream_index = current_stream_index
 
-         -- Update the parameters to reflect the current stream
-         params:set("stream_name", streams[current_stream_index].name)
-          params:set("stream_address", streams[current_stream_index].address)
+        -- Update the parameters to reflect the current stream
+        params:set("stream_name", streams[current_stream_index].name)
+        params:set("stream_address", streams[current_stream_index].address)
 
         -- Redraw the screen to show the play icon on the playing track
         redraw()
@@ -141,7 +138,7 @@ function toggle_favorite()
     end
 end
 
--- sort streams by favorite status
+-- sort streams by favorite status and name
 function sort_streams()
     local was_playing = is_playing and streams[playing_stream_index]
     table.sort(streams, function(a, b)
@@ -242,13 +239,14 @@ function redraw()
         if stream_index <= #streams then
             local stream = streams[stream_index]
             if stream_index == current_stream_index then
-                -- Draw a rectangle for the current stream
+                -- highlight the stream under the scroll cursor in white
                 screen.font_size(10)
-                screen.level(15) -- Set the background color to white
+                screen.level(15) -- Set the highlight color to white
                 screen.rect(0, (i - 1) * 8, 128, 10) -- Draw a rectangle
                 screen.fill() -- Fill the rectangle with white
                 screen.level(0) -- Set the text color as black 
             elseif is_playing and stream_index == playing_stream_index then
+                -- highlight the currently playing stream in grey
                 screen.level(5)
                 screen.rect(0, (i - 1) * 8, 128, 10)
                 screen.fill()
@@ -258,6 +256,7 @@ function redraw()
                 screen.font_size(8)
             end
             screen.move(1, i * 8)
+            -- add favorite and playing icons to the stream name if applicable
             screen.text((stream.favorite and '+' or ' ') .. (is_playing and stream_index == playing_stream_index and '►' or '') .. stream.name)
         end
     end
@@ -277,6 +276,7 @@ function init()
     load_state()
     load_streams()
 
+    -- select a stream list file
     params:add_separator("select stream list")
     params:add{type = "file", id = "stream_file", name = "stream list: ", path = selected_file,
     action = function(value)
@@ -286,29 +286,34 @@ function init()
     end
     }
 
-    params:add_separator("open = leave mpv running")
+    -- set the exit option (how mpv will behave when another script is selected)
     -- "open" - script will continue playing when another script is selected (can run radio through effects, etc..)
     -- "close" - typical behavior, stops radio when another script is selected
+    params:add_separator("open = leave mpv running")
     params:add{type = "option", id = "exit_option", name = "exit option: ", options = {"close", "leave open"}, default = exit_option == "close" and 1 or 2,
     action = function(value)
     exit_option = value == 1 and "close" or "leave open"
     end
     }
 
-    -- params:add_separator("edit cur. stream name or url")
+    -- edit the stream name
     params:add_separator("edit current stream")
     params:add{type = "text", id = "stream_name", name = "",
         action = function(value) 
-            streams[current_stream_index].name = value 
+            streams[current_stream_index].name = value
             save_streams()
-        end}
+        end
+    }
 
-     params:add{type = "text", id = "stream_address", name = "",
-     action = function(value) 
-         streams[current_stream_index].address = value 
+    -- edit the stream url
+    params:add{type = "text", id = "stream_address", name = "",
+     action = function(value)
+         streams[current_stream_index].address = value
          save_streams()
-     end}
+     end
+    }
 
+    -- add a new stream to the current list of streams
     params:add_separator("add stream: (name,url)")
     params:add{type = "text", id = "add_stream: ", name = "add stream",
         action = function(value)
@@ -320,6 +325,7 @@ function init()
         end
     }
 
+    -- delete the current stream from the stream list
     params:add_separator("delete current stream")
     params:add{type = "trigger", id = "delete_stream", name = " ***delete current stream***",
     action = function(value)
@@ -332,11 +338,11 @@ function init()
         params:set("stream_name", streams[current_stream_index].name)
         params:set("stream_address", streams[current_stream_index].address)
     end
-
+    -- remember which stream is playing if exit_option is "open" so it will be shown as playing when the script is re-opened
     if playing_stream_index and exit_option ~= "close" then
         current_stream_index = playing_stream_index
         play_stream()
     else
         current_stream_index = 1
-    end    
+    end
 end

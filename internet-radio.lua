@@ -16,9 +16,12 @@
 -- k2 stops playback
 --
 -- params:
+-- stream list 
+-- exit option 
 -- edit stream name
 -- edit stream url
 -- add stream* 
+-- delete currentstream
 -- *see "add your own streams" 
 -- in the readme*
 

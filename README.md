@@ -1,39 +1,41 @@
 ![currentscreenshot](screenshot.png)
-# this is a work in progress!
-- play internet radio streams from your norns
-- a great use for norns when you're not actively making music on it
-- also a test of github copilot
-- inspired by @mlogger 's idea in https://llllllll.co/t/norns-ideas/17625/1328
+# stream internet radio from norns
+inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://llllllll.co/t/norns-ideas/17625/1328)
+* *requires internet connection and **[mpv](https://mpv.io/) - not installed by default**
+ 
+- **to install this script, enter the following into maiden:**
+  - `;install https://github.com/tapecanvas/internet-radio`
 
-- **requires internet connection (wifi or ethernet) and [mpv](https://mpv.io/) to be installed (not installed by default)**
-    - **to check for/install mpv:**
-        - from maiden `os.execute('sudo apt install mpv')`
-          - enter 'y' when prompted and then hit 'enter'
+- **to install mpv on your norns using one of the methods below:**
+    - install mpv from **maiden:**
+        - in maiden, enter `os.execute('sudo apt install mpv')`
+          - enter 'Y' when prompted and then hit 'enter'
           - will take a minute or so to install
           - if successful, you should see something like `true exit 0` and `<ok>` in the matron window in maiden
-      - **OR**
+    - **or** install mpv over **ssh**
         - ssh into norns `ssh we@norns.local`
         - run `sudo apt install mpv`
-- the order that you install internet-radio and mpv does not matter
+> *the order that you install internet-radio and mpv does not matter
 
-- **to install this script, enter the following into maiden:**
-`;install https://github.com/tapecanvas/internet-radio`
 
-# currently:
+# controls:
 ### main controls:
-- e2 scrolls through list
-- e3 favorites/unfavorites streams
-- k3 plays selected stream (also stops previously playing stream before playing a new stream)
-- k2 stops playback
+- **e2 -** scrolls through list of streams
+- **e3 -** favorites/unfavorites a stream
+- **k3 -** plays stream
+- **k2 -** stops playback
 
 ### params menu:
-- stream list (choose a list containing links to internet streams)
-- exit option (close - kill mpv and close script if another script is selected, open - leave mpv running to run through effects scripts, etc) default = close
-- edit stream name
-- edit stream url
-- add stream (see "add your own streams" below)
+- **stream list -** choose a file containing a list of links to internet streams
+- **exit option -** how should mpv behave when you select another script?
+  - **close (default)** - kill mpv if another script is selected
+  - **open** - leave mpv running to run through effects scripts, etc
+- **edit stream name -** modify stream name (can also be edited in maiden)
+- **edit stream url -** modify stream url (can also be edited in maiden)
+- **add stream -** (see "add your own streams" below)
+- **delete stream -** delete the currently selected stream from stream list file.
 
-# add your own streams (see stream sources section):
+# add your own streams:
 ### method one (recommended):
 - direct your browser of choice to maiden (yournornsip/maiden)
 - go to `/code/internet-radio/lib/` directory
@@ -45,41 +47,38 @@
 - this will add a stream to the currently selected stream list
 - go to the params page
 - use a usb keyboard(recommended) or e2 and e3 to enter the stream info in this format:
-`stream name, https://yourstreamurl`
+`stream name, https://yourstreamurl` the script will handle the rest
 
 # supported stream formats:
-- .mp3
-- .pls
-- .m3u
-- .aac
-- .ogg 
-- .wma
-- flac
-- and maybe more. MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
+- MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
+  - you will mainly see .m3u .mp3 and .pls streams 
+
 
 # stream sources:
-- [Live ATC - air traffic control streams](https://www.liveatc.net/feedindex.php) - I like these, but will not add to public stream list due to their terms of use
-- [Broadcastify - emergency, rail, and aviation feeds](https://www.broadcastify.com/listen/) - these usually have annoying ads when you first tune in..
-- [radio-browser - lil bit of everything](https://www.radio-browser.info/tags)
+- [Live ATC - air traffic control streams](https://www.liveatc.net/feedindex.php)
+- [SomaFM](https://somafm.com/listen/)
+- [NTS](https://www.nts.live) + a little dev tools snooping
+- [radio aporee](https://radio.aporee.org)
+- [radio-browser](https://www.radio-browser.info/tags)  - lil bit of everything
 - [demoscene and video game music stream links](https://mw.rat.bz/davgmsrl/)
-- [internet-radio.com](https://www.internet-radio.com)
 - [github.com/mikepierce/internet-radio-streams](https://github.com/mikepierce/internet-radio-streams)
 - [streamfinder.com](https://www.streamfinder.com)
 - [github.com/junguler/m3u-radio-music-playlists](https://github.com/junguler/m3u-radio-music-playlists)
 - [github.com/mcplayer9999/radio-garden-m3u](https://github.com/mcplayer9999/radio-garden-m3u)
 - [gist.github.com/spence-man/internet-radio-streams](https://gist.github.com/spence-man/1c37a339d2c5e3aa5b90f7c72b5a39d1)
-- [SomaFM](https://somafm.com/listen/)
-- [NTS](https://www.nts.live) - takes a little dev tools snooping
-- [radio aporee](https://radio.aporee.org)
+- [internet-radio.com](https://www.internet-radio.com)
+- [Broadcastify - emergency, rail, and aviation feeds](https://www.broadcastify.com/listen/) - these usually have annoying ads when you first tune in..
 - and countless others if you're interesting in hunting for them 
 
 # to-do:
-- [ ] rename and modify /lib/default.lua and update streams.lua
+- [ ] rename and modify /lib/default.lua (make a template file) and update streams.lua
 - [ ] clean up code / comment / streams list (rename/remove default.lua)
-- [ ] clean up readme
 - [ ] beta test phase
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
+
+## archive:
+- [x] clean up readme
 - [x] update readme again
 - [x] update script header controls
 - [x] test everything thoroughly

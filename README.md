@@ -1,12 +1,12 @@
 ![currentscreenshot](screenshot.png)
 # stream internet radio from norns
-inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://llllllll.co/t/norns-ideas/17625/1328)
-* *requires internet connection and **[mpv](https://mpv.io/) - not installed by default**
+> inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://llllllll.co/t/norns-ideas/17625/1328)
+- requires internet connection and **[mpv](https://mpv.io/) - _not installed by default_**
  
 - **to install this script, enter the following into maiden:**
   - `;install https://github.com/tapecanvas/internet-radio`
 
-- **to install mpv on your norns, use one of the methods below:**
+- **to install mpv on your norns _(required)_, use one of the methods below:**
     - install mpv from **maiden:**
         - in maiden, enter `os.execute('sudo apt install mpv')`
           - enter 'Y' when prompted and then hit 'enter'
@@ -37,21 +37,21 @@ inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://lll
 
 # add your own streams:
 ### method one (recommended):
-- direct your browser of choice to maiden (yournornsip/maiden)
-- go to `/code/internet-radio/lib/` directory
-- edit `streams.lua` or make your own `filename.lua` list
-- follow the format:
+1. direct your browser of choice to **maiden** (http://norns.local/maiden/ **or** yournornsip/maiden)
+2. go to `/code/internet-radio/lib/` directory
+3. edit `streams.lua` or make your own `filename.lua` list
+4. follow the format:
 `{name = "stream name", address = "streamurl"},`
 
 ### method two:
 - this will add a stream to the currently selected stream list
-- go to the params page
-- use a usb keyboard(recommended) or e2 and e3 to enter the stream info in this format:
+1. go to the params page
+2. use a usb keyboard(recommended) or e2 and e3 to enter the stream info in this format:
 `stream name, https://yourstreamurl` the script will handle the rest
 
 # supported stream formats:
 - MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
-  - you will mainly see .m3u .mp3 and .pls streams 
+  > you will mainly see .m3u .mp3 and .pls streams 
 
 
 # stream sources:
@@ -69,6 +69,11 @@ inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://lll
 - [internet-radio.com](https://www.internet-radio.com)
 - [Broadcastify - emergency, rail, and aviation feeds](https://www.broadcastify.com/listen/) - these usually have annoying ads when you first tune in..
 - and countless others if you're interesting in hunting for them 
+
+
+# community streams:
+- if you make a custom list of streams that you want to share, submit a pull request to this repo and I will include it in the project for others to use!
+
 
 # to-do:
 - [ ] rename and modify /lib/default.lua (make a template file) and update streams.lua

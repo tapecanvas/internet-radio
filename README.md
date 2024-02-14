@@ -6,7 +6,7 @@ inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://lll
 - **to install this script, enter the following into maiden:**
   - `;install https://github.com/tapecanvas/internet-radio`
 
-- **to install mpv on your norns using one of the methods below:**
+- **to install mpv on your norns, use one of the methods below:**
     - install mpv from **maiden:**
         - in maiden, enter `os.execute('sudo apt install mpv')`
           - enter 'Y' when prompted and then hit 'enter'

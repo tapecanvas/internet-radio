@@ -23,6 +23,7 @@ return {
     {name = "NTS - The Tube", address = "https://stream-relay-geo.ntslive.net/mixtape26", favorite = false},
     {name = "Nectarine Demoscene Radio", address = "https://radio.worlio.com/stream/necta192.mp3", favorite = nil},
     {name = "Novosibirsk Gnd/Twr/App/Radar/Misc", address = "https://www.liveatc.net/play/unnt.pls", favorite = false},
+    {name = "Partytronic", address = "https://partytronic.com", favorite = nil},
     {name = "RJAA Tower 1", address = "https://www.liveatc.net/play/rjaa_twr1.pls", favorite = false},
     {name = "Radio Aporee", address = "http://radio.aporee.org:8000/aporee.m3u", favorite = nil},
     {name = "Radio Nintendo", address = "http://Play.RadioNintendo.com:8000/stream", favorite = nil},

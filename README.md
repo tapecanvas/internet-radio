@@ -7,6 +7,7 @@
   - `;install https://github.com/tapecanvas/internet-radio`
 
 - **to install mpv on your norns _(required)_, use one of the methods below:**
+- might need to `sudo apt-get update` before installing mpv
     - install mpv from **maiden:**
         - in maiden, enter `os.execute('sudo apt install mpv')`
           - enter 'Y' when prompted and then hit 'enter'
@@ -17,6 +18,7 @@
         - run `sudo apt install mpv`
         - press `enter` when asked if you want to continue with install
         - wait for the install to complete (will return to prompt after successful install)
+
 - *the order that you install internet-radio and mpv does not matter
 - **_restart your norns after both internet-radio and mpv have been installed_**
 
@@ -64,6 +66,8 @@
 - [radio aporee](https://radio.aporee.org)
 - [radio-browser](https://www.radio-browser.info/tags)  - lil bit of everything
 - [demoscene and video game music stream links](https://mw.rat.bz/davgmsrl/)
+- [all BBC streams](https://garfnet.org.uk/download/radio/20231029-bbc-radio-norewind.m3u.txt)
+- [eclectic streams](https://garfnet.org.uk/download/radio/20231029-internet-radio.m3u.txt)
 - [github.com/mikepierce/internet-radio-streams](https://github.com/mikepierce/internet-radio-streams)
 - [streamfinder.com](https://www.streamfinder.com)
 - [github.com/junguler/m3u-radio-music-playlists](https://github.com/junguler/m3u-radio-music-playlists)

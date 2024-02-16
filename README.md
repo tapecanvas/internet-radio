@@ -1,6 +1,10 @@
 ![currentscreenshot](screenshot.png)
 # stream internet radio from norns
 > inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://llllllll.co/t/norns-ideas/17625/1328)
+
+### * visit [llllllll.com/internet-radio](https://llllllll.co/t/internet-radio/66152) - for discussion, ideas, and help  
+
+---
 - requires internet connection and **[mpv](https://mpv.io/) - _not installed by default_**
  
 - **to install this script, enter the following into maiden:**
@@ -58,7 +62,6 @@
 - MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
   > you will mainly see .m3u .mp3 and .pls streams 
 
-
 # stream sources:
 - [Live ATC - air traffic control streams](https://www.liveatc.net/feedindex.php)
 - [SomaFM](https://somafm.com/listen/)
@@ -83,11 +86,14 @@
 
 
 # to-do:
-- [ ] beta test phase
+- [ ] beta test phase (currently)
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 
+---
 ## archive:
+- [x] add lines link to script header and readme
+- [x] add BBC streams to /lib
 - [x] rename and modify /lib/default.lua (make a template file) and update streams.lua
 - [x] clean up code / comment / streams list (rename/remove default.lua)
 - [x] clean up readme

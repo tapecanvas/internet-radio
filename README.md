@@ -27,7 +27,7 @@
 - **_restart your norns after both internet-radio and mpv have been installed_**
 
 # controls:
-- if you aren't hearing anything, make sure your monitor volume in norns mixer is turned up
+- if you aren't hearing anything, make sure your monitor and input volumes in norns mixer are turned up!
 ### main controls:
 - **e2 -** scrolls through list of streams
 - **e3 -** favorites/unfavorites a stream

@@ -11,10 +11,12 @@
   - `;install https://github.com/tapecanvas/internet-radio`
 
 - **to install mpv on your norns _(required)_, use one of the methods below:**
-- might need to `sudo apt-get update` before installing mpv
+
     - install mpv from **maiden:**
-        - in maiden, enter `os.execute('sudo apt install mpv')`
-          - enter 'Y' when prompted and then hit 'enter'
+        - in maiden,
+          - run `os.execute('sudo apt-get update')` before installing mpv 
+          - then enter `os.execute('sudo apt install mpv')`
+          - enter 'Y' when prompted and then hit 'enter' to continue the installation
           - will take a minute or so to install
           - if successful, you should see something like `true exit 0` and `<ok>` in the matron window in maiden
     - **or** install mpv over **ssh**

@@ -87,6 +87,8 @@
 
 # to-do:
 - [ ] beta test phase (currently)
+- [ ] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
+- [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 

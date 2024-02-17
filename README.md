@@ -90,13 +90,13 @@
 
 # to-do:
 - [ ] beta test phase (currently)
+- [ ] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 
 ---
 ## archive:
-- [x] resolve update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
 - [x] add lines link to script header and readme
 - [x] add BBC streams to /lib
 - [x] rename and modify /lib/default.lua (make a template file) and update streams.lua

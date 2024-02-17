@@ -78,6 +78,44 @@ function save_streams()
     file:close()
 end
 
+-- TESTING this block should move the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
+-- this allows the user to edit the streams.lua file without making changes to the /code/internet-radio directory - which currently prevents updating from maiden  
+-- inelegant but functional
+-- 
+-- function to check if a file exists 
+function file_exists(name)
+    local f = io.open(name, "r")
+    if f ~= nil then 
+        io.close(f) 
+        return true 
+    else 
+        return false 
+    end
+end
+
+-- function to copy a file if it doesn't exist
+function copy_stream_defaults(src, dst)
+    if not file_exists(dst) then
+        os.execute(string.format("cp -n %s %s", src, dst))
+    end
+end
+
+-- define the source and destination directories
+local src_dir = "home/we/dust/code/internet-radio/lib/"
+local dst_dir = "home/we/dust/data/internet-radio/"
+
+-- define file names to check for
+local file_names = {"streams.lua", "template.lua", "bbc.lua"}
+
+-- for each file, call the copy function to copy files from the src to the dst if they don't already exist there
+for _, file_name in ipairs(file_names) do
+    local src = src_dir .. file_name
+    local dst = dst_dir .. file_name
+    copy_stream_defaults(src, dst)
+end
+--
+-- end TESTING
+
 -- scroll through stream list
 function scroll_streams(direction)
     current_stream_index = current_stream_index + direction
@@ -193,7 +231,7 @@ function load_state()
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
         default_file:write("    exit_option = 1,\n")
-        default_file:write("    selected_file = \"/home/we/dust/code/internet-radio/lib/streams.lua\",\n")
+        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams.lua\",\n") 
         default_file:write("}\n")
         default_file:close()
         file = dofile(path)
@@ -202,7 +240,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
-        selected_file = file.selected_file or "/home/we/dust/code/internet-radio/lib/streams.lua"
+        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams.lua" 
     end
 end
 

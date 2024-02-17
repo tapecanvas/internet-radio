@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.9c (beta) @tapecanvas
+-- v0.1.10 (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -18,16 +18,13 @@
 -- params:
 -- stream list 
 -- exit option 
--- edit stream name
--- edit stream url
--- add stream* 
--- delete current stream
+--
 -- *see "add your own streams" 
 -- in the readme*
 
 local current_stream = nil
 FileSelect = require 'fileselect'
-local selected_file = "/home/we/dust/data/internet-radio/streams.lua"
+local selected_file = "/home/we/dust/data/internet-radio/streams/streams.lua"
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
@@ -40,15 +37,6 @@ local streams = {}
 -- add a new stream to the streams array
 function add_stream(name, address)
    table.insert(streams, {name = name, address = address, favorite = false})
-end
-
--- remove the current stream from the streams array *are you sure?*
-function delete_stream()
-    if streams[current_stream_index] then
-        table.remove(streams, current_stream_index)
-        save_streams()
-        os.execute('killall mpv')
-    end
 end
 
 -- load streams from selected file
@@ -83,17 +71,20 @@ end
 -- it will overwrite any existing files with the same name in /data/internet-radio when script is reloaded or updated from maiden (by design so default streams lists can be updated regularly with the script)
 -- do not modify the files in /code/internet-radio/lib! Doing so will prevent the script from updating properly!
 -- to make your own stream list, simply rename the /data/internet-radio/template.lua file and edit the name and address fields
--- start
--- function to copy files from /code/internet-radio/lib to /data/internet-radio/ 
+-- inelegant, but it works for now:
+
 function copy_stream_defaults(src, dst)
-        os.execute(string.format("cp %s %s", src, dst))
+    os.execute("mkdir -p /home/we/dust/data/internet-radio/streams/")
+    os.execute(string.format("cp %s %s", src, dst))
 end
 
 -- define the source and destination directories
 local src_dir = "home/we/dust/code/internet-radio/lib/"
-local dst_dir = "home/we/dust/data/internet-radio/"
+local dst_dir = "home/we/dust/data/internet-radio/streams/"
 
--- define file names to copy // do not edit the data within these files without renaming them first to avoid overwriting
+-- define file names to copy
+-- do not edit the data within these files without renaming them first to avoid overwriting
+-- these files will be overwritten when the script is loaded or updated from maiden
 local file_names = {"streams.lua", "template.lua", "bbc.lua"}
 
 -- for each defined file, call the copy function to copy (overwrite) files from the src to the dst directory
@@ -102,7 +93,6 @@ for _, file_name in ipairs(file_names) do
     local dst = dst_dir .. file_name
     copy_stream_defaults(src, dst)
 end
--- finish
 
 -- scroll through stream list
 function scroll_streams(direction)
@@ -128,10 +118,6 @@ function play_stream()
         os.execute('mpv --no-video --jack-port="crone:input_(1|2)" ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
         playing_stream_index = current_stream_index
-
-        -- Update the parameters to reflect the current stream
-        params:set("stream_name", streams[current_stream_index].name)
-        params:set("stream_address", streams[current_stream_index].address)
 
         -- Redraw the screen to show the play icon on the playing track
         redraw()
@@ -219,7 +205,7 @@ function load_state()
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
         default_file:write("    exit_option = 1,\n")
-        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams.lua\",\n")  -- updated
+        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams/streams.lua\",\n")
         default_file:write("}\n")
         default_file:close()
         file = dofile(path)
@@ -228,7 +214,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
-        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams.lua"  -- updated
+        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams/streams.lua"  -- updated
     end
 end
 
@@ -290,7 +276,7 @@ function redraw()
 end
 
 -- deinitialization 
--- stop mpv or leave running when another script is selected 
+-- stop mpv (close) when another script is selected
 function cleanup()
     save_state()
     if exit_option == "close" then
@@ -299,7 +285,9 @@ function cleanup()
 end
 
 function init()
+    -- load the last state of the script
     load_state()
+    -- load the streams list
     load_streams()
 
     -- select a stream list file
@@ -322,48 +310,6 @@ function init()
     end
     }
 
-    -- edit the stream name
-    params:add_separator("edit current stream")
-    params:add{type = "text", id = "stream_name", name = "",
-        action = function(value) 
-            streams[current_stream_index].name = value
-            save_streams()
-        end
-    }
-
-    -- edit the stream url
-    params:add{type = "text", id = "stream_address", name = "",
-     action = function(value)
-         streams[current_stream_index].address = value
-         save_streams()
-     end
-    }
-
-    -- add a new stream to the current list of streams
-    params:add_separator("add stream: (name,url)")
-    params:add{type = "text", id = "add_stream: ", name = "add stream",
-        action = function(value)
-            local name, address = string.match(value, "(.-),(.*)")
-            if name and address then
-                add_stream(name, address)
-                save_streams()
-            end
-        end
-    }
-
-    -- delete the current stream from the stream list
-    params:add_separator("delete current stream")
-    params:add{type = "trigger", id = "delete_stream", name = " ***delete current stream***",
-    action = function(value)
-        delete_stream()
-        end
-    }
-
-    -- Check that there is a current stream before setting the parameters
-    if streams[current_stream_index] then
-        params:set("stream_name", streams[current_stream_index].name)
-        params:set("stream_address", streams[current_stream_index].address)
-    end
     -- remember which stream is playing if exit_option is "open" so it will be shown as playing when the script is re-opened
     if playing_stream_index and exit_option ~= "close" then
         current_stream_index = playing_stream_index
@@ -372,4 +318,5 @@ function init()
         current_stream_index = 1
     end
 end
+
 -- Will wonders never cease?

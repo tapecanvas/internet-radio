@@ -103,7 +103,7 @@ end
 
 -- define the source and destination directories
 local src_dir = "home/we/dust/code/internet-radio/lib/"
-local dst_dir = "home/we/dust/data/internet-radio/streams/"
+local dst_dir = "home/we/dust/data/internet-radio/"
 
 -- define file names to check for
 local file_names = {"streams.lua", "template.lua", "bbc.lua"}
@@ -232,7 +232,7 @@ function load_state()
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
         default_file:write("    exit_option = 1,\n")
-        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams/streams.lua\",\n")  -- updated
+        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams.lua\",\n")  -- updated
         default_file:write("}\n")
         default_file:close()
         file = dofile(path)
@@ -241,7 +241,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
-        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams/streams.lua"  -- updated
+        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams.lua"  -- updated
     end
 end
 

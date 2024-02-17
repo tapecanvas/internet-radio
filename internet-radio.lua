@@ -1,9 +1,9 @@
 -- internet-radio
--- v0.1.8 (beta) @tapecanvas
+-- v0.1.9 (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
--- github-copilot
+-- github-copilot + @eigen
 -- llllllll.co/t/internet-radio/66152
 --
 -- internet radio player
@@ -27,11 +27,12 @@
 
 local current_stream = nil
 FileSelect = require 'fileselect'
-local selected_file = "/home/we/dust/code/internet-radio/lib/streams.lua"
+local selected_file = "/home/we/dust/data/internet-radio/streams.lua"  
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
 local exit_option = "close"
+
 
 -- initialize an empty stream array to load streams.lua into
 local streams = {}
@@ -78,7 +79,7 @@ function save_streams()
     file:close()
 end
 
--- TESTING this block should move the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
+-- TESTING this block moves the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
 -- this allows the user to edit the streams.lua file without making changes to the /code/internet-radio directory - which currently prevents updating from maiden  
 -- inelegant but functional
 -- 
@@ -231,7 +232,7 @@ function load_state()
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
         default_file:write("    exit_option = 1,\n")
-        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams.lua\",\n") 
+        default_file:write("    selected_file = \"/home/we/dust/data/internet-radio/streams.lua\",\n")  -- updated
         default_file:write("}\n")
         default_file:close()
         file = dofile(path)
@@ -240,7 +241,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
-        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams.lua" 
+        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams.lua"  -- updated
     end
 end
 

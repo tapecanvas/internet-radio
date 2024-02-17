@@ -102,6 +102,7 @@
 
 ---
 ## archive:
+- [x] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
 - [x] add lines link to script header and readme
 - [x] add BBC streams to /lib
 - [x] rename and modify /lib/default.lua (make a template file) and update streams.lua

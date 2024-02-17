@@ -49,9 +49,8 @@
 # add your own streams:
 ### method one (recommended):
 1. direct your browser of choice to **maiden** (http://norns.local/maiden/ **or** yournornsip/maiden)
-2. go to the `/data/internet-radio/lib/` directory  
-> **DO NOT edit /code/internet-radio/lib/ files!** This folder only exists to easily package the default stream lists with the script. **_Changes made to it will prevent updating the script from Maiden_**
-3. edit a list or create your own `filename.lua` list 
+2. go to `/code/internet-radio/lib/` directory
+3. edit `streams.lua` or make your own `filename.lua` list
 4. follow the format:
 `{name = "stream name", address = "streamurl"},`
 
@@ -90,13 +89,13 @@
 
 # to-do:
 - [ ] beta test phase (currently)
+- [ ] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 
 ---
 ## archive:
-- [x] resolve update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
 - [x] add lines link to script header and readme
 - [x] add BBC streams to /lib
 - [x] rename and modify /lib/default.lua (make a template file) and update streams.lua

@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.9 (beta) @tapecanvas
+-- v0.1.9b (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -79,7 +79,7 @@ function save_streams()
     file:close()
 end
 
--- TESTING this block moves the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
+-- this block moves the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
 -- this allows the user to edit the streams.lua file without making changes to the /code/internet-radio directory - which currently prevents updating from maiden  
 -- inelegant but functional
 -- 
@@ -115,7 +115,6 @@ for _, file_name in ipairs(file_names) do
     copy_stream_defaults(src, dst)
 end
 --
--- end TESTING
 
 -- scroll through stream list
 function scroll_streams(direction)
@@ -385,3 +384,4 @@ function init()
         current_stream_index = 1
     end
 end
+-- Will wonders never cease?

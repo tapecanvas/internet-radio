@@ -49,7 +49,7 @@
 # add your own streams:
 ### method one (recommended):
 1. direct your browser of choice to **maiden** (http://norns.local/maiden/ **or** yournornsip/maiden)
-2. go to the `/data/internet-radio/` directory  
+2. go to the `/data/internet-radio/streams/` directory  
 > **DO NOT edit /code/internet-radio/lib/ files!** This folder only exists to easily package the default stream lists with the script. **_Changes made to it will prevent updating the script from Maiden_**
 3. edit a list or create your own `filename.lua` list 
 4. follow the format:
@@ -90,7 +90,12 @@
 
 # to-do:
 - [ ] beta test phase (currently)
-- [ ] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
+- [ ] /data/internet-radio/streams path will work
+- [x] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
+  - sort out issues this fix caused:
+    - [ ] cant edit default streams (if named the same name) no biggie really
+    - [ ] BUT, that makes most of the edit params useless when playing from a default stream list (delete, add, edit - all useless) - maybe no biggie?
+    - [ ] something else I haven't thought of
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready

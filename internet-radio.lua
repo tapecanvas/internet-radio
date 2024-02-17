@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.9b (beta) @tapecanvas
+-- v0.1.9c (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -27,7 +27,7 @@
 
 local current_stream = nil
 FileSelect = require 'fileselect'
-local selected_file = "/home/we/dust/data/internet-radio/streams.lua"  
+local selected_file = "/home/we/dust/data/internet-radio/streams.lua"
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
@@ -51,7 +51,7 @@ function delete_stream()
     end
 end
 
--- load streams from streams.lua file
+-- load streams from selected file
 function load_streams()
     streams = {} -- clear the streams array
     local file = dofile(selected_file)
@@ -64,7 +64,7 @@ function load_streams()
     redraw()
 end
 
--- save changes to streams.lua file
+-- save changes to streams file
 function save_streams()
     local file, err = io.open(selected_file, "w")
     if not file then
@@ -79,42 +79,30 @@ function save_streams()
     file:close()
 end
 
--- this block moves the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
--- this allows the user to edit the streams.lua file without making changes to the /code/internet-radio directory - which currently prevents updating from maiden  
--- inelegant but functional
--- 
--- function to check if a file exists 
-function file_exists(name)
-    local f = io.open(name, "r")
-    if f ~= nil then 
-        io.close(f) 
-        return true 
-    else 
-        return false 
-    end
-end
-
--- function to copy a file if it doesn't exist
+-- the following block copies the contents of /code/internet-radio/lib to /data/internet-radio/streams (copies whether the file exists in the destination directory or not)
+-- it will overwrite any existing files with the same name in /data/internet-radio when script is reloaded or updated from maiden (by design so default streams lists can be updated regularly with the script)
+-- do not modify the files in /code/internet-radio/lib! Doing so will prevent the script from updating properly!
+-- to make your own stream list, simply rename the /data/internet-radio/template.lua file and edit the name and address fields
+-- start
+-- function to copy files from /code/internet-radio/lib to /data/internet-radio/ 
 function copy_stream_defaults(src, dst)
-    if not file_exists(dst) then
-        os.execute(string.format("cp -n %s %s", src, dst))
-    end
+        os.execute(string.format("cp %s %s", src, dst))
 end
 
 -- define the source and destination directories
 local src_dir = "home/we/dust/code/internet-radio/lib/"
 local dst_dir = "home/we/dust/data/internet-radio/"
 
--- define file names to check for
+-- define file names to copy // do not edit the data within these files without renaming them first to avoid overwriting
 local file_names = {"streams.lua", "template.lua", "bbc.lua"}
 
--- for each file, call the copy function to copy files from the src to the dst if they don't already exist there
+-- for each defined file, call the copy function to copy (overwrite) files from the src to the dst directory
 for _, file_name in ipairs(file_names) do
     local src = src_dir .. file_name
     local dst = dst_dir .. file_name
     copy_stream_defaults(src, dst)
 end
---
+-- finish
 
 -- scroll through stream list
 function scroll_streams(direction)

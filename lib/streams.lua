@@ -26,7 +26,6 @@ return {
     {name = "Partytronic", address = "https://partytronic.com", favorite = nil},
     {name = "RJAA Tower 1", address = "https://www.liveatc.net/play/rjaa_twr1.pls", favorite = false},
     {name = "Radio Aporee", address = "http://radio.aporee.org:8000/aporee.m3u", favorite = nil},
-    {name = "Radio Earth", address = "https://radio.earth", favorite = nil},
     {name = "Radio Nintendo", address = "http://Play.RadioNintendo.com:8000/stream", favorite = nil},
     {name = "SceneStat - Demoscene", address = "https://SceneSat.com/listen/port80/mid.m3u", favorite = nil},
     {name = "SomaFM - DEF CON Radio", address = "http://ice1.somafm.com/defcon-128-mp3", favorite = nil},

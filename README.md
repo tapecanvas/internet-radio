@@ -85,7 +85,6 @@ return {
 
 
 # to-do:
-- [ ] favorites get overwritten (should have seen this coming..) - also causes playing index to be off by num of favorites when reopen app if exit_option is open 
 - [ ] beta test phase (currently)
 - [ ] look into radio garden api
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
@@ -95,6 +94,7 @@ return {
 ---
 ## archive:
 - [x] fix favorite state saving bug
+  - favorites get overwritten (should have seen this coming..) - also causes playing index to be off by num of favorites when reopen app if exit_option is open 
 - [x] revert /lib streams overwriting /data stream files
   - this will require a slightly different approach to pushing out new stream lists, but that's worth having more stability and better saving of user changes
 - [x] remove params (add, edit, delete) - these were kind of redundant and would cause problems since default streams overwrite user changes 

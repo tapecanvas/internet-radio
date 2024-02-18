@@ -14,7 +14,7 @@
  
     - install mpv from **maiden:**
         - in maiden,
-          - run `os.execute('sudo apt update')` before installing mpv (refreshes package list)
+          - run `os.execute('sudo apt update')` before installing mpv (refreshes package list) - no need to upgrade
           - then enter `os.execute('sudo apt install mpv')`
           - enter 'Y' when prompted and then hit 'enter' to continue the installation
           - will take a minute or so to install
@@ -86,6 +86,7 @@ return {
 
 # to-do:
 - [ ] beta test phase (currently)
+- [ ] look into radio garden api
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready

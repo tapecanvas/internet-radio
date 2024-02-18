@@ -1,9 +1,9 @@
 -- internet-radio
--- v0.1.10 (beta) @tapecanvas
+-- v0.1.11 (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
--- github-copilot + @eigen
+-- @eigen + github-copilot
 -- llllllll.co/t/internet-radio/66152
 --
 -- internet radio player
@@ -24,35 +24,30 @@
 
 local current_stream = nil
 FileSelect = require 'fileselect'
-local selected_file = "/home/we/dust/data/internet-radio/streams/streams.lua"
+local selected_file = "/home/we/dust/data/internet-radio/streams/streams.lua"  
 local current_stream_index = 1
 local top_stream_index = 1
 local is_playing = false
 local exit_option = "close"
-
-
--- initialize an empty stream array to load streams.lua into
 local streams = {}
 
--- add a new stream to the streams array
-function add_stream(name, address)
-   table.insert(streams, {name = name, address = address, favorite = false})
-end
-
--- load streams from selected file
+-- load streams from the chosen stream list file
 function load_streams()
-    streams = {} -- clear the streams array
+    -- clear the streams array
+    streams = {}
     local file = dofile(selected_file)
     if file then
         streams = file
-        sort_streams() -- sort the streams after loading them
+        sort_streams()
     end
-    current_stream_index = 1 -- reset the current stream index
-    top_stream_index = 1 -- reset the top stream index
+    -- reset the current stream index
+    current_stream_index = 1 
+    -- reset the top stream index
+    top_stream_index = 1
     redraw()
 end
 
--- save changes to streams file
+-- save changes to streams.lua file (mostly just handling favorite status, but rewrites entire list to do it)
 function save_streams()
     local file, err = io.open(selected_file, "w")
     if not file then
@@ -67,32 +62,43 @@ function save_streams()
     file:close()
 end
 
--- the following block copies the contents of /code/internet-radio/lib to /data/internet-radio/streams (copies whether the file exists in the destination directory or not)
--- it will overwrite any existing files with the same name in /data/internet-radio when script is reloaded or updated from maiden (by design so default streams lists can be updated regularly with the script)
--- do not modify the files in /code/internet-radio/lib! Doing so will prevent the script from updating properly!
--- to make your own stream list, simply rename the /data/internet-radio/template.lua file and edit the name and address fields
--- inelegant, but it works for now:
+-- the following sections move the contents of /code/internet-radio/lib to /data/internet-radio/streams if the included files are not already there
+-- this allows the user to edit the streams.lua file in /data without making changes to the /code/internet-radio directory - which currently prevents updating from maiden  
+-- inelegant but functional
+--
+-- function to check if files exists 
+function file_exists(name)
+    local f = io.open(name, "r")
+    if f ~= nil then 
+        io.close(f) 
+        return true 
+    else 
+        return false 
+    end
+end
 
+-- function to copy a file if it doesn't exist
 function copy_stream_defaults(src, dst)
-    os.execute("mkdir -p /home/we/dust/data/internet-radio/streams/")
-    os.execute(string.format("cp %s %s", src, dst))
+    if not file_exists(dst) then
+        os.execute("mkdir -p /home/we/dust/data/internet-radio/streams/")
+        os.execute(string.format("cp -n %s %s", src, dst))
+    end
 end
 
 -- define the source and destination directories
 local src_dir = "home/we/dust/code/internet-radio/lib/"
 local dst_dir = "home/we/dust/data/internet-radio/streams/"
 
--- define file names to copy
--- do not edit the data within these files without renaming them first to avoid overwriting
--- these files will be overwritten when the script is loaded or updated from maiden
+-- define file names to check for
 local file_names = {"streams.lua", "template.lua", "bbc.lua"}
 
--- for each defined file, call the copy function to copy (overwrite) files from the src to the dst directory
+-- for each file, call the copy function to copy files from the src to the dst if they don't already exist there
 for _, file_name in ipairs(file_names) do
     local src = src_dir .. file_name
     local dst = dst_dir .. file_name
     copy_stream_defaults(src, dst)
 end
+-- that ends the copy section
 
 -- scroll through stream list
 function scroll_streams(direction)
@@ -114,11 +120,11 @@ end
 
 -- play selected stream
 function play_stream()
+    os.execute('killall mpv')
     if streams[current_stream_index] then
         os.execute('mpv --no-video --jack-port="crone:input_(1|2)" ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
         playing_stream_index = current_stream_index
-
         -- Redraw the screen to show the play icon on the playing track
         redraw()
     end
@@ -174,7 +180,8 @@ function sort_streams()
     redraw()
 end
 
--- Save the current state to a file (if exit_option is "open", this will retain which stream is being played when you re-open the script)
+-- Save the current state to a file 
+-- (if exit_option is "open", this will retain which stream is being played when you re-open the script)
 function save_state()
     local file, err = io.open("/home/we/dust/data/internet-radio/state.lua", "w")
     if not file then
@@ -201,6 +208,7 @@ function load_state()
             print("Failed to create file: " .. err)
             return
         end
+        -- sets the default state
         default_file:write("return {\n")
         default_file:write("    current_stream_index = 1,\n")
         default_file:write("    playing_stream_index = nil,\n")
@@ -214,7 +222,7 @@ function load_state()
         current_stream_index = file.current_stream_index or 1
         playing_stream_index = file.playing_stream_index
         exit_option = file.exit_option == 1 and "close" or "leave open"
-        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams/streams.lua"  -- updated
+        selected_file = file.selected_file or "/home/we/dust/data/internet-radio/streams/streams.lua"
     end
 end
 
@@ -257,7 +265,7 @@ function redraw()
                 screen.rect(0, (i - 1) * 8, 128, 10) -- Draw a rectangle
                 screen.fill() -- Fill the rectangle with white
                 screen.level(0) -- Set the text color as black 
-            elseif is_playing and stream_index == playing_stream_index then
+            elseif stream_index == playing_stream_index then
                 -- highlight the currently playing stream in grey
                 screen.level(5)
                 screen.rect(0, (i - 1) * 8, 128, 10)
@@ -269,14 +277,14 @@ function redraw()
             end
             screen.move(1, i * 8)
             -- add favorite and playing icons to the stream name if applicable
-            screen.text((stream.favorite and '+' or ' ') .. (is_playing and stream_index == playing_stream_index and '►' or '') .. stream.name)
+            screen.text((stream.favorite and '+' or ' ') .. (stream_index == playing_stream_index and '►' or '') .. stream.name)
         end
     end
     screen.update()
 end
 
 -- deinitialization 
--- stop mpv (close) when another script is selected
+-- if exit_option is "close" mpv is killed on script exit
 function cleanup()
     save_state()
     if exit_option == "close" then
@@ -285,9 +293,7 @@ function cleanup()
 end
 
 function init()
-    -- load the last state of the script
     load_state()
-    -- load the streams list
     load_streams()
 
     -- select a stream list file
@@ -313,10 +319,8 @@ function init()
     -- remember which stream is playing if exit_option is "open" so it will be shown as playing when the script is re-opened
     if playing_stream_index and exit_option ~= "close" then
         current_stream_index = playing_stream_index
-        play_stream()
+        redraw()
     else
         current_stream_index = 1
     end
 end
-
--- Will wonders never cease?

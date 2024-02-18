@@ -85,6 +85,7 @@ return {
 
 
 # to-do:
+- [ ] favorites get overwritten (should have seen this coming..) - also causes playing index to be off by num of favorites when reopen app if exit_option is open 
 - [ ] beta test phase (currently)
 - [ ] look into radio garden api
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters

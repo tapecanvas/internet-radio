@@ -14,13 +14,14 @@
  
     - install mpv from **maiden:**
         - in maiden,
-          - run `os.execute('sudo apt-get update')` before installing mpv 
+          - run `os.execute('sudo apt update')` before installing mpv (refreshes package list) - no need to upgrade
           - then enter `os.execute('sudo apt install mpv')`
           - enter 'Y' when prompted and then hit 'enter' to continue the installation
           - will take a minute or so to install
           - if successful, you should see something like `true exit 0` and `<ok>` in the matron window in maiden
     - **or** install mpv over **ssh**
         - ssh into norns `ssh we@norns.local`
+        - run `sudo apt update` to refresh package list
         - run `sudo apt install mpv`
         - press `enter` when asked if you want to continue with install
         - wait for the install to complete (will return to prompt after successful install)
@@ -41,25 +42,20 @@
 - **exit option -** how should mpv behave when you select another script?
   - **close (default)** - kill mpv if another script is selected
   - **open** - leave mpv running to run through effects scripts, etc
-- **edit stream name -** modify stream name (can also be edited in maiden)
-- **edit stream url -** modify stream url (can also be edited in maiden)
-- **add stream -** (see "add your own streams" below)
-- **delete stream -** delete the currently selected stream from stream list file.
+
 
 # add your own streams:
-### method one (recommended):
+> **DO NOT edit /code/internet-radio/lib/ files!** This folder only exists to easily package/update the default stream lists with the script **_changes made to it will prevent updating the script from Maiden_**
 1. direct your browser of choice to **maiden** (http://norns.local/maiden/ **or** yournornsip/maiden)
-2. go to the `/data/internet-radio/streams/` directory  
-> **DO NOT edit /code/internet-radio/lib/ files!** This folder only exists to easily package the default stream lists with the script. **_Changes made to it will prevent updating the script from Maiden_**
-3. edit a list or create your own `filename.lua` list 
+2. go to the `/data/internet-radio/streams/` directory in the left side pane
+3. copy and rename template.lua or create your own `filename.lua` list 
 4. follow the format:
-`{name = "stream name", address = "streamurl"},`
-
-### method two:
-- this will add a stream to the currently selected stream list
-1. go to the params page
-2. use a usb keyboard(recommended) or e2 and e3 to enter the stream info in this format:
-`stream name, https://yourstreamurl` the script will handle the rest
+``` lua
+return {
+{name = "stream name", address = "streamurl"},
+{name = "stream name", address = "streamurl"},
+}
+```
 
 # supported stream formats:
 - MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
@@ -89,19 +85,18 @@
 
 
 # to-do:
+- [ ] favorites get overwritten (should have seen this coming..) - also causes playing index to be off by num of favorites when reopen app if exit_option is open 
 - [ ] beta test phase (currently)
-- [ ] /data/internet-radio/streams path will work
-- [x] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
-  - sort out issues this fix caused:
-    - [ ] cant edit default streams (if named the same name) no biggie really
-    - [ ] BUT, that makes most of the edit params useless when playing from a default stream list (delete, add, edit - all useless) - maybe no biggie?
-    - [ ] something else I haven't thought of
+- [ ] look into radio garden api
 - [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 
 ---
 ## archive:
+- [x] remove params (add, edit, delete) - these were kind of redundant and would cause problems since default streams overwrite user changes 
+- [x] move /data/internet-radio/streams to prevent "local changes" preventing script updates
+- [x] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3) again
 - [x] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3)
 - [x] add lines link to script header and readme
 - [x] add BBC streams to /lib

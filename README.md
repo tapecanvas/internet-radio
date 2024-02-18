@@ -94,6 +94,9 @@ return {
 
 ---
 ## archive:
+- [x] fix favorite state saving bug
+- [x] revert /lib streams overwriting /data stream files
+  - this will require a slightly different approach to pushing out new stream lists, but that's worth having more stability and better saving of user changes
 - [x] remove params (add, edit, delete) - these were kind of redundant and would cause problems since default streams overwrite user changes 
 - [x] move /data/internet-radio/streams to prevent "local changes" preventing script updates
 - [x] figure out update [issue](https://github.com/tapecanvas/internet-radio/issues/3) again

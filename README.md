@@ -6,7 +6,7 @@
 
 ---
 - requires internet connection and **[mpv](https://mpv.io/) - _not installed by default_**
- 
+  - **disclaimer:** this script, unlike most others scripts, internet-radio requires adding not only mpv, but also its dependency packages to your norns. doing so has the __potential to cause unforeseen issues__ down the line with norns updates as your system would deviate from the base norns image.
 - **to install this script, enter the following into maiden:**
   - `;install https://github.com/tapecanvas/internet-radio`
 
@@ -14,8 +14,8 @@
  
     - install mpv from **maiden:**
         - in maiden,
-          - run `os.execute('sudo apt update')` before installing mpv (refreshes package list) - no need to upgrade
-          - then enter `os.execute('sudo apt install mpv')`
+          - run `os.execute('sudo apt -y update')` before installing mpv (refreshes package list) - no need to upgrade
+          - then enter `os.execute('sudo apt -y install mpv')`
           - enter 'Y' when prompted and then hit 'enter' to continue the installation
           - will take a minute or so to install
           - if successful, you should see something like `true exit 0` and `<ok>` in the matron window in maiden
@@ -40,9 +40,16 @@
 ### params menu:
 - **stream list -** choose a file containing a list of links to internet streams
 - **exit option -** how should mpv behave when you select another script?
-  - **close (default)** - kill mpv if another script is selected
-  - **open** - leave mpv running to run through effects scripts, etc
-
+  - **close (default) -** kill mpv if another script is selected
+  - **open -** leave mpv running to run through effects scripts, etc
+- ***pitch -** adjust the pitch (and speed) of the stream (requires restarting stream to hear effect)
+- ***speed -** adjust the speed of the stream without altering pitch (requires restarting the stream)
+  - *pitch and speed are not real-time controls, they insert their values into the mpv play command 
+  - *the stream will need to be re-started to hear the effect of changes to pitch and speed 
+    - the way [mpv scaletempo](https://mpv.io/manual/master/#audio-filters-scaletempo[) works is weird and their documentations for it is even stranger.. (still trying to wrap my head around it honestly)
+    - the pitch param mostly does pitch, but also speed. 
+    - the speed param works as expected + or - with pitch left untouched
+    - *since streams are broadcast in real time, increasing speed or pitch will cause gaps in audio while the stream catches up, you can work around this in creative ways though, experiment
 
 # add your own streams:
 > **DO NOT edit /code/internet-radio/lib/ files!** This folder only exists to easily package/update the default stream lists with the script **_changes made to it will prevent updating the script from Maiden_**
@@ -68,6 +75,7 @@ return {
 - [radio aporee](https://radio.aporee.org)
 - [radio-browser](https://www.radio-browser.info/tags)  - lil bit of everything
 - [demoscene and video game music stream links](https://mw.rat.bz/davgmsrl/)
+- [railroadradio.net](http://www.railroadradio.net)
 - [all BBC streams](https://garfnet.org.uk/download/radio/20231029-bbc-radio-norewind.m3u.txt)
 - [eclectic streams](https://garfnet.org.uk/download/radio/20231029-internet-radio.m3u.txt)
 - [github.com/mikepierce/internet-radio-streams](https://github.com/mikepierce/internet-radio-streams)
@@ -79,20 +87,22 @@ return {
 - [Broadcastify - emergency, rail, and aviation feeds](https://www.broadcastify.com/listen/) - these usually have annoying ads when you first tune in..
 - and countless others if you're interesting in hunting for them 
 
-
 # community streams:
 - if you make a custom list of streams that you want to share, submit a pull request to this repo and I will include it in the project for others to use!
 
-
 # to-do:
+- [ ] favorite selection control needs work still
 - [ ] beta test phase (currently)
 - [ ] look into radio garden api
-- [ ] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [ ] demo video
 - [ ] add to [norns.community](https://github.com/monome-community/norns-community) when v1.0.0 is ready
 
 ---
 ## archive:
+- [x] rework favorite sort screen behavior
+- [x] test with norns update 240221
+- [x] quick fix accidental mass-favorite selection bug
+- [x] pitch/speed param? https://mpv.io/manual/master/#audio-filters
 - [x] fix favorite state saving bug
   - favorites get overwritten (should have seen this coming..) - also causes playing index to be off by num of favorites when reopen app if exit_option is open 
 - [x] revert /lib streams overwriting /data stream files

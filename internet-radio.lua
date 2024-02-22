@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.11 (beta) @tapecanvas
+-- v0.1.12 (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -18,6 +18,8 @@
 -- params:
 -- stream list 
 -- exit option 
+-- pitch
+-- speed
 --
 -- *see "add your own streams" 
 -- in the readme*
@@ -109,7 +111,9 @@ function scroll_streams(direction)
         current_stream_index = 1
     end
 
-    if current_stream_index < top_stream_index then
+    if current_stream_index == 1 then
+        top_stream_index = 1
+    elseif current_stream_index < top_stream_index then
         top_stream_index = current_stream_index
     elseif current_stream_index > top_stream_index + 6 then
         top_stream_index = current_stream_index - 6
@@ -119,10 +123,13 @@ function scroll_streams(direction)
 end
 
 -- play selected stream
+-- no video: disable any video output from streams, audio channels stereo: force stereo output / make mono streams play in both channels, jack-port: sends stream audio into the crone input channels 
 function play_stream()
     os.execute('killall mpv')
     if streams[current_stream_index] then
-        os.execute('mpv --no-video --jack-port="crone:input_(1|2)" ' .. streams[current_stream_index].address .. ' &')
+        local scale = params:get("scale")
+        local speed = params:get("speed")
+        os.execute('mpv --no-video --audio-channels=stereo --audio-pitch-correction=no --jack-port="crone:input_(1|2)" --af=scaletempo=scale=' .. scale .. ':speed=tempo' .. ' --speed=' .. speed ..' ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
         playing_stream_index = current_stream_index
         -- Redraw the screen to show the play icon on the playing track
@@ -141,7 +148,8 @@ end
 -- toggle favorite status
 function toggle_favorite()
     if streams[current_stream_index] then
-        streams[current_stream_index].favorite = not streams[current_stream_index].favorite
+        local favorited_stream = streams[current_stream_index]
+        favorited_stream.favorite = not favorited_stream.favorite
         local was_playing = is_playing and streams[playing_stream_index]
         sort_streams()
         if was_playing then
@@ -150,6 +158,21 @@ function toggle_favorite()
                     playing_stream_index = i
                     break
                 end
+            end
+        end
+        -- If the stream was just favorited, find its new list position and move the cursor to that position (helps counter accidental multiple favorite selection)
+        if favorited_stream.favorite then
+            for i, stream in ipairs(streams) do
+                if stream == favorited_stream then
+                    current_stream_index = i
+                    break
+                end
+            end
+            -- Adjust the top_stream_index to ensure the favorited stream is visible 
+            if current_stream_index < top_stream_index then
+                top_stream_index = current_stream_index
+            elseif current_stream_index >= top_stream_index + 7 then
+                top_stream_index = current_stream_index - 6
             end
         end
         redraw()
@@ -239,12 +262,15 @@ function key(n,z)
 end
 
 -- encoders
+-- add resistance to "favorite" encoder to make it harder to select multiple favorites at once
+norns.enc.sens(3,300) 
+
 function enc(n,d)
     if n == 2 then
         scroll_streams(d)
     end
     if n == 3 then
-        toggle_favorite()
+        toggle_favorite(d)
     end
 end
 
@@ -315,6 +341,15 @@ function init()
     exit_option = value == 1 and "close" or "leave open"
     end
     }
+
+     -- pitch/tempo params: 
+    -- these are not real-time controls, they insert their values into the mpv play command. the stream will need to be re-started to hear the effect 
+    -- the way mpv scaletempo works is weird and their documentations is even stranger.. 
+    -- the pitch param mostly does pitch, but also a little speed. speed works as expected +or- with pitch untouched
+    -- since streams are broadcast in real time, increasing speed or pitch will cause gaps in audio while the stream catches up, you can work around this in creative ways though, experiment
+    params:add_separator("pitch and speed")
+    params:add_control("speed", "pitch:", controlspec.new(0.1, 2.0, 'lin', 0.02, 1, ""))
+    params:add_control("scale", "speed:", controlspec.new(0.1, 2.0, 'lin', 0.02, 1, ""))
 
     -- remember which stream is playing if exit_option is "open" so it will be shown as playing when the script is re-opened
     if playing_stream_index and exit_option ~= "close" then

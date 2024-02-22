@@ -46,7 +46,7 @@
 - ***speed -** adjust the speed of the stream without altering pitch (requires restarting the stream)
   - *pitch and speed are not real-time controls, they insert their values into the mpv play command 
   - *the stream will need to be re-started to hear the effect of changes to pitch and speed 
-    - the way [mpv scaletempo](https://mpv.io/manual/master/#audio-filters-scaletempo[) works is weird and their documentations for it is even stranger.. (still trying to wrap my head around it honestly)
+    - the way [mpv scaletempo](https://mpv.io/manual/master/#audio-filters-scaletempo[) works is weird and the documentation for it is even stranger.. (still trying to wrap my head around it honestly)
     - the pitch param mostly does pitch, but also speed. 
     - the speed param works as expected + or - with pitch left untouched
     - *since streams are broadcast in real time, increasing speed or pitch will cause gaps in audio while the stream catches up, you can work around this in creative ways though, experiment

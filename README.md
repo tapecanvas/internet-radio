@@ -99,6 +99,7 @@ return {
 
 ---
 ## archive:
+- [x] fixed mono streams to play through both inputs
 - [x] rework favorite sort screen behavior
 - [x] test with norns update 240221
 - [x] quick fix accidental mass-favorite selection bug

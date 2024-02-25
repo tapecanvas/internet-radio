@@ -2,7 +2,7 @@
 # stream internet radio from norns
 > inspired by @mlogger 's idea from the lines thread - ["norns ideas"](https://llllllll.co/t/norns-ideas/17625/1328)
 
-### * visit [llllllll.com/internet-radio](https://llllllll.co/t/internet-radio/66152) - for discussion, ideas, and help  
+### * visit [llllllll.com/internet-radio](https://llllllll.co/t/internet-radio/66152) for discussion, ideas, and help  
 
 ---
 - requires internet connection and **[mpv](https://mpv.io/) - _not installed by default_**

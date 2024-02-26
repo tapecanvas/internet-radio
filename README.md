@@ -7,6 +7,7 @@
 ---
 - requires internet connection and **[mpv](https://mpv.io/) - _not installed by default_**
   - **disclaimer:** this script, unlike most others scripts, internet-radio requires adding not only mpv, but also its dependency packages to your norns. doing so has the __potential to cause unforeseen issues__ down the line with norns updates as your system would deviate from the base norns image.
+---
 - **to install this script, enter the following into maiden:**
   - `;install https://github.com/tapecanvas/internet-radio`
 
@@ -64,6 +65,22 @@ return {
 }
 ```
 
+# make a m3u stream of your tape folder:
+_also works for any other folder containing audio on your norns_
+- in the `data/internet-radio` folder in maiden and make a new file
+- add the following lines inside that file:
+```text
+#EXTM3U
+/home/we/dust/audio/tape/
+```
+ _if you want to use a folder other than tape, use that folder name instead_   
+- save the file as `yourfilename.m3u`
+- then go to the "streams" file you want to add your tape stream to (can be one of the default streams lists, or make a new one based off the included template)
+- add the following line to the streams file:  
+`{name = "tapestream", address = "/home/we/data/internet-radio/yourfilename.m3u"},`
+- reload the script and navigate to your newly updated stream file and listen to an endless stream of your tape folder!
+
+
 # supported stream formats:
 - MPV uses ffmpeg to decode everything, so any streaming format that ffmpeg [supports](http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features) should work. 
   > you will mainly see .m3u .mp3 and .pls streams 
@@ -92,6 +109,9 @@ return {
 
 # to-do:
 - [ ] favorite selection control needs work still
+- [ ] add loop flag to mpv play call (not needed for typical streams, but for tape stream, or other non-infinite stream sources it would be nice to have)
+- [ ] bug fix: play icons sometimes show when they shouldn't
+- [ ] look into making this a mod (would be much easier to switch streams when processing audio through other scripts if it was a mod) 
 - [ ] beta test phase (currently)
 - [ ] look into radio garden api
 - [ ] demo video
@@ -99,6 +119,7 @@ return {
 
 ---
 ## archive:
+- [x] add instructions for making local tape folder stream creation
 - [x] fixed mono streams to play through both inputs
 - [x] rework favorite sort screen behavior
 - [x] test with norns update 240221

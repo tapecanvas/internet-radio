@@ -111,6 +111,7 @@ _also works for any other folder containing audio on your norns_
 - [ ] favorite selection control needs work still
 - [ ] add loop flag to mpv play call (not needed for typical streams, but for tape stream, or other non-infinite stream sources it would be nice to have)
 - [ ] bug fix: play icons sometimes show when they shouldn't
+- [ ] detach mpv activity from terminal - currently makes glitchy beep sound when switching streams if I try to do this with `--no-terminal`
 - [ ] look into making this a mod (would be much easier to switch streams when processing audio through other scripts if it was a mod) 
 - [ ] beta test phase (currently)
 - [ ] look into radio garden api

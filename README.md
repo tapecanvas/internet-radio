@@ -6,7 +6,7 @@
 
 ---
 - requires internet connection and **[mpv](https://mpv.io/) - _not installed by default_**
-  - **disclaimer:** this script, unlike most others scripts, internet-radio requires adding not only mpv, but also its dependency packages to your norns. doing so has the __potential to cause unforeseen issues__ down the line with norns updates as your system would deviate from the base norns image.
+  - **disclaimer:** this script, unlike most other scripts, internet-radio requires adding not only mpv, but also its dependency packages to your norns. doing so has the __potential to cause unforeseen issues__ down the line with norns updates as your system would deviate from the base norns image.
 ---
 - **to install this script, enter the following into maiden:**
   - `;install https://github.com/tapecanvas/internet-radio`

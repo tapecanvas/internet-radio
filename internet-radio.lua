@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.12 (beta) @tapecanvas
+-- v0.1.12b (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -25,7 +25,7 @@
 -- in the readme*
 
 local current_stream = nil
-FileSelect = require 'fileselect'
+local fileSelect = require('fileselect')
 local selected_file = "/home/we/dust/data/internet-radio/streams/streams.lua"  
 local current_stream_index = 1
 local top_stream_index = 1

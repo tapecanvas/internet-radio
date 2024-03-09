@@ -109,6 +109,7 @@ _also works for any other folder containing audio on your norns_
 
 # to-do:
 - [ ] favorite selection control needs work still
+- [ ] mpv [rubberband](https://mpv.io/manual/master/#audio-filters-rubberband) works much better for pitch manipulation
 - [ ] add loop flag to mpv play call (not needed for typical streams, but for tape stream, or other non-infinite stream sources it would be nice to have)
 - [ ] bug fix: play icons sometimes show when they shouldn't
 - [ ] detach mpv activity from terminal - currently makes glitchy beep sound when switching streams if I try to do this with `--no-terminal`

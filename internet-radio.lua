@@ -1,5 +1,5 @@
 -- internet-radio
--- v0.1.12b (beta) @tapecanvas
+-- v0.1.13 (beta) @tapecanvas
 -- inspired by:
 -- @mlogger + @infinitedigits
 -- with help from:
@@ -127,9 +127,9 @@ end
 function play_stream()
     os.execute('killall mpv')
     if streams[current_stream_index] then
-        local scale = params:get("scale")
+        local pitch = params:get("pitch")
         local speed = params:get("speed")
-        os.execute('mpv --no-video --audio-channels=stereo --audio-pitch-correction=no --jack-port="crone:input_(1|2)" --af=scaletempo=scale=' .. scale .. ':speed=tempo' .. ' --speed=' .. speed ..' ' .. streams[current_stream_index].address .. ' &')
+        os.execute('mpv --no-video --audio-channels=stereo  --jack-port="crone:input_(1|2)" --af=rubberband=pitch-scale=' .. pitch .. ' --speed=' .. speed ..' ' .. streams[current_stream_index].address .. ' &')
         is_playing = true
         playing_stream_index = current_stream_index
         -- Redraw the screen to show the play icon on the playing track
@@ -139,7 +139,7 @@ end
 
 -- stop the stream
 function stop_stream()
-    os.execute('killall mpv')
+    os.execute('killall mpv') -- killall -KILL mpv would force kill mpv with highest priority, but causes an audible beep/glitch when executed. so far this works fine as-is
     is_playing = false
     playing_stream_index = nil
     redraw()
@@ -225,7 +225,7 @@ function load_state()
     local file
     local path = "/home/we/dust/data/internet-radio/state.lua"
     if not pcall(function() file = dofile(path) end) then
-        -- If the file does not exist, create it with default values
+        -- if the file does not exist, create it with default values
         local default_file, err = io.open(path, "w")
         if not default_file then
             print("Failed to create file: " .. err)
@@ -342,14 +342,12 @@ function init()
     end
     }
 
-     -- pitch/tempo params: 
+    -- pitch/speed params: 
     -- these are not real-time controls, they insert their values into the mpv play command. the stream will need to be re-started to hear the effect 
-    -- the way mpv scaletempo works is weird and their documentations is even stranger.. 
-    -- the pitch param mostly does pitch, but also a little speed. speed works as expected +or- with pitch untouched
-    -- since streams are broadcast in real time, increasing speed or pitch will cause gaps in audio while the stream catches up, you can work around this in creative ways though, experiment
+    -- since streams are broadcast in real time, increasing speed will cause gaps in audio while the stream catches up, you can work around this in creative ways though, experiment
     params:add_separator("pitch and speed")
-    params:add_control("speed", "pitch:", controlspec.new(0.1, 2.0, 'lin', 0.02, 1, ""))
-    params:add_control("scale", "speed:", controlspec.new(0.1, 2.0, 'lin', 0.02, 1, ""))
+    params:add_control("pitch", "pitch:", controlspec.new(-0.1, 3.0, 'lin', 0.02, 1, ""))
+    params:add_control("speed", "speed:", controlspec.new(0.1, 2.0, 'lin', 0.02, 1, ""))
 
     -- remember which stream is playing if exit_option is "open" so it will be shown as playing when the script is re-opened
     if playing_stream_index and exit_option ~= "close" then
